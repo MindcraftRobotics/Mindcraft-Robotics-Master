@@ -56,16 +56,6 @@ public class TeleThreeJoysticks
         -1.0, 1.0);
         
         robosystem.drivetrain.setPower(left, right);
-
-        if (driverRight.getRawButton(2)) {
-            robosystem.colorwheel.spinWheel();
-        }
-        if (driverLeft.getRawButton(2)) {
-            robosystem.colorwheel.selectColor();
-        }
-        if (driverLeft.getRawButtonReleased(5)) {
-            robosystem.colorwheel.resetRotations();
-        }
         
     
     

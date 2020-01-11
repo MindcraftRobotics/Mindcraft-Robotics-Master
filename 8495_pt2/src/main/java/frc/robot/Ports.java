@@ -15,8 +15,8 @@ public class Ports {             // public: we want it to be accessible, right?
     public static final int DRIVETRAIN_RIGHT_SLAVE = 4;
  
 
-    public static final int JOYSTICK_LEFT = 0;
-    public static final int JOYSTICK_RIGHT = 1;
+    public static final int JOYSTICK_LEFT = 1;
+    public static final int JOYSTICK_RIGHT = 0;
     public static final int JOYSTICK_CODRIVER = 2;
     public static final int XBOX_CODRIVER = 3;
 

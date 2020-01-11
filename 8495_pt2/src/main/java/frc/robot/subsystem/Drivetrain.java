@@ -27,11 +27,11 @@ import frc.robot.controlsystem.*;
 public class Drivetrain
 {
     //talons, subsystems, etc
-    private TalonFX drivetrain_leftMaster;
-    private TalonFX drivetrain_leftSlave;
+    private TalonSRX drivetrain_leftMaster;
+    private TalonSRX drivetrain_leftSlave;
 
-    private TalonFX drivetrain_rightMaster;
-    private TalonFX drivetrain_rightSlave;
+    private TalonSRX drivetrain_rightMaster;
+    private TalonSRX drivetrain_rightSlave;
 
 
    
@@ -43,11 +43,11 @@ public class Drivetrain
     //constructors
     private Drivetrain()
     {
-        drivetrain_leftMaster = new TalonFX(Ports.DRIVETRAIN_LEFT_MASTER);
-        drivetrain_leftSlave = new TalonFX(Ports.DRIVETRAIN_LEFT_SLAVE);
+        drivetrain_leftMaster = new TalonSRX(Ports.DRIVETRAIN_LEFT_MASTER);
+        drivetrain_leftSlave = new TalonSRX(Ports.DRIVETRAIN_LEFT_SLAVE);
        
-        drivetrain_rightMaster = new TalonFX(Ports.DRIVETRAIN_RIGHT_MASTER);
-        drivetrain_rightSlave = new TalonFX(Ports.DRIVETRAIN_RIGHT_SLAVE);
+        drivetrain_rightMaster = new TalonSRX(Ports.DRIVETRAIN_RIGHT_MASTER);
+        drivetrain_rightSlave = new TalonSRX(Ports.DRIVETRAIN_RIGHT_SLAVE);
        
 
         drivetrain_rightSlave.follow(drivetrain_rightMaster);
@@ -57,10 +57,10 @@ public class Drivetrain
 
         drivetrain_rightMaster.configVoltageCompSaturation(Constants.Drivetrain.kMaxVoltage, 10);
         drivetrain_rightMaster.enableVoltageCompensation(true);
-        drivetrain_rightMaster.setInverted(true);
-        drivetrain_rightSlave.setInverted(true);
+        drivetrain_rightMaster.setInverted(false);
+        drivetrain_rightSlave.setInverted(false);
 
-        drivetrain_leftMaster.setInverted(false);//make sure to check when the actual bot comes around
+        drivetrain_leftMaster.setInverted(true);//make sure to check when the actual bot comes around
         drivetrain_leftSlave.setInverted(false);
 
         drivetrain_leftMaster.configVoltageCompSaturation(Constants.Drivetrain.kMaxVoltage, 10);

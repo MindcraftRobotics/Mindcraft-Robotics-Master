@@ -69,8 +69,7 @@ public class Robot extends TimedRobot {
     CameraServer.getInstance().startAutomaticCapture();
     //Limelight.setPipeline(0);
     robosystem.drivetrain.zeroSensors();
-    ledMode.setValue(1);
-    robosystem.colorwheel.resetRotations();
+    ledMode.setNumber(1);
     
    
     
@@ -120,21 +119,21 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    ledMode.setValue(3);
-    robosystem.colorwheel.readColor();
-    //robosystem.colorwheel.countRotations();
-    double current = compressor.getCompressorCurrent();
+    //double current = compressor.getCompressorCurrent();
+    ledMode.setNumber(1);
+    
+    
     teleControllers.update();
     double x = tx.getDouble(0.0);
     double y = ty.getDouble(0.0);
     double area = ta.getDouble(0.0);
-    double KpHeading = -0.012f;
-    double min_command = 0.051f;
-    double left_command = 0.15;
-    double right_command = 0.15;
-    double KpDistance = -0.022f;
+    double KpHeading = -0.0235f;
+    double min_command = 0.05f;
+    double left_command = 0.21;
+    double right_command = 0.21;
+    double KpDistance = -0.04f;
     if (teleControllers.driverLeft.getRawButton(1)) {
-      ledMode.setValue(3);
+      ledMode.setNumber(3);
       double heading_error = -x;
       double steering_adjust = 0.0f;
       double distance_error = -y;
@@ -149,19 +148,41 @@ public class Robot extends TimedRobot {
       
       }
       double distance_adjust = KpDistance * distance_error;
-      robosystem.drivetrain.setPower(left_command += steering_adjust - distance_adjust, right_command -= steering_adjust + distance_adjust);
+      robosystem.drivetrain.setPower(left_command -= steering_adjust - distance_adjust, right_command += steering_adjust + distance_adjust);
    
   
     }
   }
 
- 
+   
+
+    
+   
+
+
+   
+
+
+   
+  
+    
+
+  
+  
+
   /**
    * This function is called periodically during test mode.
    */
   @Override
   public void testPeriodic() {
   }
+
+       
+
+
+ 
+
+
 
 
 }
