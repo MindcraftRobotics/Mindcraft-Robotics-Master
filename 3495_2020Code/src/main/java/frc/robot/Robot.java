@@ -71,6 +71,7 @@ public class Robot extends TimedRobot {
     robosystem.drivetrain.zeroSensors();
     ledMode.setValue(1);
     robosystem.colorwheel.resetRotations();
+    robosystem.colorwheel.equalColorStringLast();
     
    
     
@@ -128,11 +129,11 @@ public class Robot extends TimedRobot {
     double x = tx.getDouble(0.0);
     double y = ty.getDouble(0.0);
     double area = ta.getDouble(0.0);
-    double KpHeading = -0.012f;
+    double KpHeading = -0.0115f;
     double min_command = 0.051f;
-    double left_command = 0.15;
-    double right_command = 0.15;
-    double KpDistance = -0.022f;
+    double left_command = 0.10;
+    double right_command = 0.10;
+    double KpDistance = -0.0325f;
     if (teleControllers.driverLeft.getRawButton(1)) {
       ledMode.setValue(3);
       double heading_error = -x;

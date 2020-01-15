@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Notifier;
 import com.revrobotics.ColorSensorV3;
+import com.revrobotics.ColorSensorV3.RawColor;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorMatch;
 import edu.wpi.first.wpilibj.I2C;
@@ -28,18 +29,22 @@ public class ColorWheel {
 
     private final I2C.Port i2cPort = I2C.Port.kOnboard;
     private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
-
-    private final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
-    private final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
-    private final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
-    private final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
+   
+    private final Color kBlueTarget = ColorMatch.makeColor(0.123, 0.422, 0.453);
+    private final Color kGreenTarget = ColorMatch.makeColor(0.172, 0.573, 0.253);
+    private final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.145);
+    private final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.125);
+    private final Color kFellowTarget = ColorMatch.makeColor(0.427, 0.509, 0.064);
     private final ColorMatch m_colorMatcher = new ColorMatch();
     String colorString;
     String selectedColor;
     String colorStringLast;
     String desiredColor;
+    String expectedLeftColor;
+    String expectedRightColor;
     private double rotations;
     private int transitions;
+    
     
 
     
@@ -48,7 +53,8 @@ public class ColorWheel {
         m_colorMatcher.addColorMatch(kBlueTarget);
         m_colorMatcher.addColorMatch(kGreenTarget);
         m_colorMatcher.addColorMatch(kRedTarget);
-        m_colorMatcher.addColorMatch(kYellowTarget);    
+        m_colorMatcher.addColorMatch(kYellowTarget);
+        m_colorMatcher.addColorMatch(kFellowTarget);
         rotations = 0.0;
         transitions = 0;
         
@@ -64,20 +70,43 @@ public class ColorWheel {
 
     public void readColor() {
         Color detectedColor = m_colorSensor.getColor();
+        int redValue = m_colorSensor.getRed();
+        int blueValue = m_colorSensor.getBlue();
+        int greenValue = m_colorSensor.getGreen();
+        int total = redValue + blueValue + greenValue;
+        double redPercentage = redValue/total;
+        double bluePercentage = blueValue/total;
+        double greenPercentage = greenValue/total;
+        double redPercentageNormalized = redPercentage - 0.1;
+        double greenPercentageNormalized = greenPercentage - 0.3;
+        double bluePercentageNormalized = bluePercentage - 0.1;
+        Color currentNormalizedColor = redPercentageNormalized, greenPercentageNormalized, bluePercentageNormalized;
+        
         ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
 
         if (match.color == kBlueTarget) {
             colorString = "Blue";
             selectedColor = "Red";
+            expectedRightColor = "Yellow";
+            expectedLeftColor = "Green"; 
+            
         } else if (match.color == kRedTarget) {
             colorString = "Red";
             selectedColor = "Blue";
+            expectedRightColor = "Green";
+            expectedLeftColor = "Yellow";
         } else if (match.color == kGreenTarget) {
             colorString = "Green";
             selectedColor = "Yellow";
+            expectedRightColor = "Blue";
+            expectedLeftColor = "Red";
         } else if (match.color == kYellowTarget) {
             colorString = "Yellow";
             selectedColor = "Green";
+            expectedRightColor = "Red";
+            expectedLeftColor = "Blue";
+        }else if (match.color == kFellowTarget) {
+            colorString = "Fellow";
         } else {
             colorString = "Unknown";
             selectedColor = "Unknown";
@@ -87,6 +116,11 @@ public class ColorWheel {
     SmartDashboard.putNumber("Red", detectedColor.red);
     SmartDashboard.putNumber("Green", detectedColor.green);
     SmartDashboard.putNumber("Blue", detectedColor.blue);
+    System.out.println(detectedColor);
+    SmartDashboard.putNumber("Raw Red", redValue);
+    SmartDashboard.putNumber("Raw Blue", blueValue);
+    SmartDashboard.putNumber("Raw Green", greenValue);
+    
     SmartDashboard.putNumber("Confidence", match.confidence);
     SmartDashboard.putString("Detected Color", colorString);
     SmartDashboard.putString("Selected Color", selectedColor);
@@ -95,7 +129,21 @@ public class ColorWheel {
     }
     public void countRotations() {
         if (colorStringLast != colorString) {
+            //if it is moving clockwise
+            if(colorString == "Green") {
+                if (colorStringLast == "Fellow") {
+                    transitions--;
+                }
+            }
+            //if it is moving counterclockwise
+            if (colorString == "Red") {
+                if (colorStringLast == "Fellow") {
+                    transitions--;
+                }
+            }
+             
             transitions++;
+            
         }
         colorStringLast = colorString;
         rotations = Math.floor(transitions/8);
@@ -108,6 +156,9 @@ public class ColorWheel {
         rotations = 0.0;
         transitions = 0;
 
+    }
+    public void equalColorStringLast() {
+        colorStringLast = colorString;
     }
     
     public void spinWheel() {
@@ -137,10 +188,9 @@ public class ColorWheel {
                 break;
                 case 'R' :
                     desiredColor = "Red";
-     
                 break;
                 case 'Y' :
- 
+                    desiredColor = "Yellow";
                 break;
             default :
             //This is corrupt data
