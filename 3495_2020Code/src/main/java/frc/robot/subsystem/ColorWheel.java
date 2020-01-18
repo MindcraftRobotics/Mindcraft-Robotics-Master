@@ -16,6 +16,7 @@ import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorMatch;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import java.lang.Math;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -30,11 +31,17 @@ public class ColorWheel {
     private final I2C.Port i2cPort = I2C.Port.kOnboard;
     private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
    
-    private final Color kBlueTarget = ColorMatch.makeColor(0.123, 0.422, 0.453);
+    /*private final Color kBlueTarget = ColorMatch.makeColor(0.123, 0.422, 0.453);
     private final Color kGreenTarget = ColorMatch.makeColor(0.172, 0.573, 0.253);
     private final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.145);
     private final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.125);
-    private final Color kFellowTarget = ColorMatch.makeColor(0.427, 0.509, 0.064);
+    */
+    private final Color kBlueTarget = ColorMatch.makeColor(0.176, 0.2772, 0.5469);
+    private final Color kGreenTarget = ColorMatch.makeColor(0.2525, 0.4843, 0.08933);
+    private final Color kRedTarget = ColorMatch.makeColor(0.63333, 0.2192, 0.148);
+    private final Color kYellowTarget = ColorMatch.makeColor(0.4272, 0.4835, 0.08833);
+    private final Color kFellowTarget = ColorMatch.makeColor(0.346, 0.328, 0.227);
+    private final Color kFreenTarget = ColorMatch.makeColor(0.240, .371, .389);
     private final ColorMatch m_colorMatcher = new ColorMatch();
     String colorString;
     String selectedColor;
@@ -44,6 +51,16 @@ public class ColorWheel {
     String expectedRightColor;
     private double rotations;
     private int transitions;
+    private int red;
+    private int green;
+    private int blue;
+    private double redPercentageNormalized;
+    private double bluePercentageNormalized;
+    private double greenPercentageNormalized;
+    
+    
+
+    
     
     
 
@@ -55,6 +72,9 @@ public class ColorWheel {
         m_colorMatcher.addColorMatch(kRedTarget);
         m_colorMatcher.addColorMatch(kYellowTarget);
         m_colorMatcher.addColorMatch(kFellowTarget);
+        m_colorMatcher.addColorMatch(kFreenTarget);
+
+
         rotations = 0.0;
         transitions = 0;
         
@@ -70,19 +90,40 @@ public class ColorWheel {
 
     public void readColor() {
         Color detectedColor = m_colorSensor.getColor();
-        int redValue = m_colorSensor.getRed();
-        int blueValue = m_colorSensor.getBlue();
-        int greenValue = m_colorSensor.getGreen();
-        int total = redValue + blueValue + greenValue;
+        double redValue = m_colorSensor.getRed();
+        double blueValue = m_colorSensor.getBlue();
+        double greenValue = m_colorSensor.getGreen();
+        double total = redValue + blueValue + greenValue;
         double redPercentage = redValue/total;
         double bluePercentage = blueValue/total;
         double greenPercentage = greenValue/total;
-        double redPercentageNormalized = redPercentage - 0.1;
-        double greenPercentageNormalized = greenPercentage - 0.3;
-        double bluePercentageNormalized = bluePercentage - 0.1;
-        Color currentNormalizedColor = redPercentageNormalized, greenPercentageNormalized, bluePercentageNormalized;
+        redPercentageNormalized = redPercentage - 0.1;
+        if (redPercentageNormalized < 0) {
+            redPercentageNormalized = 0;
+        }
+        greenPercentageNormalized = greenPercentage - 0.3;
+        if (greenPercentageNormalized < 0) {
+            greenPercentageNormalized = 0;
+        }
+        bluePercentageNormalized = bluePercentage - 0.1;
+        if(bluePercentageNormalized < 0) {
+            bluePercentageNormalized = 0;
+        }
+        double newTotal = redPercentageNormalized + greenPercentageNormalized + bluePercentageNormalized;
+        double bluePercentageZeroed = bluePercentageNormalized/newTotal;
+        double redPercentageZeroed = redPercentageNormalized/newTotal;
+        double greenPercentageZeroed = greenPercentageNormalized/newTotal;
+        double blueD = bluePercentageZeroed * 255;
+        double redD = redPercentageZeroed * 255;
+        double greenD = greenPercentageZeroed * 255;
+        blue = (int)blueD;
+        red = (int)redD;
+        green = (int)greenD;
+        Color8Bit currentColor8Bit = new Color8Bit(red, green, blue);
+        Color currentColor = new Color(currentColor8Bit);
         
-        ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
+        //multiply the new percentages by 255 per color to get a new color 
+        ColorMatchResult match = m_colorMatcher.matchClosestColor(currentColor);
 
         if (match.color == kBlueTarget) {
             colorString = "Blue";
@@ -107,40 +148,48 @@ public class ColorWheel {
             expectedLeftColor = "Blue";
         }else if (match.color == kFellowTarget) {
             colorString = "Fellow";
-        } else {
+            selectedColor = "Unknown";
+        } else if (match.color == kFreenTarget) {
+            colorString = "Freen";
+            selectedColor = "Unknown";
+        }else {
             colorString = "Unknown";
             selectedColor = "Unknown";
         }
 
    
-    SmartDashboard.putNumber("Red", detectedColor.red);
+    /*SmartDashboard.putNumber("Red", detectedColor.red);
     SmartDashboard.putNumber("Green", detectedColor.green);
-    SmartDashboard.putNumber("Blue", detectedColor.blue);
-    System.out.println(detectedColor);
-    SmartDashboard.putNumber("Raw Red", redValue);
-    SmartDashboard.putNumber("Raw Blue", blueValue);
-    SmartDashboard.putNumber("Raw Green", greenValue);
+    SmartDashboard.putNumber("Blue", detectedColor.blue);*/
+    SmartDashboard.putNumber("Red", red);
+    SmartDashboard.putNumber("Green", green);
+    SmartDashboard.putNumber("Blue", blue);
+
+
+    SmartDashboard.putNumber("Pre Nomalized Red", redPercentage);
+    SmartDashboard.putNumber("Pre Normalized Green", greenPercentage);
+    SmartDashboard.putNumber("Pre Normalized Blue", bluePercentage);
+    SmartDashboard.putNumber("Normalized Red", redPercentageZeroed);
+    SmartDashboard.putNumber("Normalized Green", greenPercentageZeroed);
+    SmartDashboard.putNumber("Normalized Blue", bluePercentageZeroed);
     
     SmartDashboard.putNumber("Confidence", match.confidence);
     SmartDashboard.putString("Detected Color", colorString);
     SmartDashboard.putString("Selected Color", selectedColor);
-
+    SmartDashboard.putNumber("Total Intensity", total);
     
     }
     public void countRotations() {
         if (colorStringLast != colorString) {
-            //if it is moving clockwise
-            if(colorString == "Green") {
-                if (colorStringLast == "Fellow") {
-                    transitions--;
-                }
-            }
             //if it is moving counterclockwise
-            if (colorString == "Red") {
-                if (colorStringLast == "Fellow") {
+            if(colorString == "Fellow") {
                     transitions--;
-                }
+                
             }
+            if(colorString == "Freen") {
+                    transitions--;
+            }
+           
              
             transitions++;
             

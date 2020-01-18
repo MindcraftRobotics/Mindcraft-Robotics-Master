@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.networktables.*;
@@ -46,6 +47,7 @@ public class Robot extends TimedRobot {
   NetworkTableEntry tx = table.getEntry("tx");
   NetworkTableEntry ty = table.getEntry("ty");
   NetworkTableEntry ta = table.getEntry("ta");
+  NetworkTableEntry tv = table.getEntry("tv");
   NetworkTableEntry ledMode = table.getEntry("ledMode");
 
 
@@ -129,17 +131,23 @@ public class Robot extends TimedRobot {
     double x = tx.getDouble(0.0);
     double y = ty.getDouble(0.0);
     double area = ta.getDouble(0.0);
+    double validTarget = tv.getDouble(0.0);
     double KpHeading = -0.0115f;
     double min_command = 0.051f;
-    double left_command = 0.10;
-    double right_command = 0.10;
-    double KpDistance = -0.0325f;
+    double left_command = 0.09;
+    double right_command = 0.09;
+    double KpDistance = -0.0315f;
+    double desiredArea = 12.637;
     if (teleControllers.driverLeft.getRawButton(1)) {
       ledMode.setValue(3);
+      
       double heading_error = -x;
       double steering_adjust = 0.0f;
       double distance_error = -y;
+      if (validTarget == 1) {
       
+      
+
       if (x > 1.0)
       {
               steering_adjust = KpHeading*heading_error - min_command;
@@ -149,9 +157,12 @@ public class Robot extends TimedRobot {
               steering_adjust = KpHeading*heading_error + min_command;
       
       }
-      double distance_adjust = KpDistance * distance_error;
+      
+      double distance_adjust = KpDistance * (desiredArea - area); //distance error for y offset
       robosystem.drivetrain.setPower(left_command += steering_adjust - distance_adjust, right_command -= steering_adjust + distance_adjust);
-   
+    }else {
+      robosystem.drivetrain.setPower(0, 0);
+    }
   
     }
   }
