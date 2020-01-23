@@ -29,6 +29,7 @@ public class TeleThreeJoysticks
     public VideoSink server;
     
     
+    
 
     private TeleThreeJoysticks()
     {
@@ -66,6 +67,7 @@ public class TeleThreeJoysticks
         if (driverLeft.getRawButtonReleased(5)) {
             robosystem.colorwheel.resetRotations();
         }
+
         
     
     
@@ -92,7 +94,7 @@ public class TeleThreeJoysticks
     
     private void coDriver()
     {
-        
+        //robosystem.colorwheel.setPower(coDriver.getY());
     }
 
     

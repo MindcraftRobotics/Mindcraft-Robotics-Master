@@ -37,8 +37,7 @@ public class Robot extends TimedRobot {
   private TeleThreeJoysticks teleControllers;
   private Compressor compressor;
   private RoboSystem robosystem;
-  private 
-  boolean valueHit;
+  private boolean valueHit;
   Servo servo = new Servo(0);
   private boolean m_LimelightHasValidTarget = false;
   private double m_LimelightDriveCommand = 0.0;
@@ -90,6 +89,7 @@ public class Robot extends TimedRobot {
    // robosystem.drivetrain.odometry.Update();
    //NavX.writeToDash();
    SmartDashboard.putNumber("axis", teleControllers.driverRight.getY());
+
    //System.out.println(Limelight.getHeight());
    //SmartDashboard.putNumber("visionbox", Limelight.getTx());
    //SmartDashboard.putNumber("Pixel Height", Limelight.getHeight());
@@ -123,23 +123,28 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    ledMode.setValue(3);
+    robosystem.colorwheel.setPower(teleControllers.coDriver.getY());
     robosystem.colorwheel.readColor();
     //robosystem.colorwheel.countRotations();
-    double current = compressor.getCompressorCurrent();
+    //double current = compressor.getCompressorCurrent();
     teleControllers.update();
     double x = tx.getDouble(0.0);
     double y = ty.getDouble(0.0);
     double area = ta.getDouble(0.0);
     double validTarget = tv.getDouble(0.0);
-    double KpHeading = -0.0115f;
-    double min_command = 0.051f;
-    double left_command = 0.09;
-    double right_command = 0.09;
-    double KpDistance = -0.0315f;
-    double desiredArea = 12.637;
-    if (teleControllers.driverLeft.getRawButton(1)) {
+    double KpHeading = -0.0145f;
+    double min_command = 0.061f;
+    double left_command = 0.085;
+    double right_command = 0.085;
+    double KpDistance = -0.0311f;
+    double desiredArea = 11.647;
+    if (teleControllers.driverRight.getRawButtonReleased(3)) {
       ledMode.setValue(3);
+    }else if (teleControllers.driverRight.getRawButtonReleased(4)) {
+      ledMode.setValue(1);
+    }
+    if (teleControllers.driverLeft.getRawButton(1)) {
+      
       
       double heading_error = -x;
       double steering_adjust = 0.0f;
@@ -150,15 +155,15 @@ public class Robot extends TimedRobot {
 
       if (x > 1.0)
       {
-              steering_adjust = KpHeading*heading_error - min_command;
+        steering_adjust = KpHeading*heading_error - min_command;
       }
       else if (x < 1.0)
       {
-              steering_adjust = KpHeading*heading_error + min_command;
+        steering_adjust = KpHeading*heading_error + min_command;
       
       }
       
-      double distance_adjust = KpDistance * (desiredArea - area); //distance error for y offset
+      double distance_adjust = KpDistance * (desiredArea - area); //distance_error for y offset
       robosystem.drivetrain.setPower(left_command += steering_adjust - distance_adjust, right_command -= steering_adjust + distance_adjust);
     }else {
       robosystem.drivetrain.setPower(0, 0);

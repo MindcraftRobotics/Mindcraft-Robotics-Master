@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Notifier;
@@ -22,7 +23,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 import frc.robot.Constants;
 import frc.robot.Ports;
-import frc.robot.controlsystem.TeleThreeJoysticks;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.controlsystem.*;
 
@@ -50,13 +50,15 @@ public class ColorWheel {
     String expectedLeftColor;
     String expectedRightColor;
     private double rotations;
-    private int transitions;
+    private double transitions;
     private int red;
     private int green;
     private int blue;
     private double redPercentageNormalized;
     private double bluePercentageNormalized;
     private double greenPercentageNormalized;
+    TalonSRX colorSpinner;
+    String[] colorLog;
     
     
 
@@ -73,6 +75,10 @@ public class ColorWheel {
         m_colorMatcher.addColorMatch(kYellowTarget);
         m_colorMatcher.addColorMatch(kFellowTarget);
         m_colorMatcher.addColorMatch(kFreenTarget);
+        colorSpinner = new TalonSRX(Ports.COLOR_SPINNER);
+        colorLog = new String[24];
+        colorSpinner.configOpenloopRamp(1.0);
+
 
 
         rotations = 0.0;
@@ -180,6 +186,7 @@ public class ColorWheel {
     
     }
     public void countRotations() {
+       
         if (colorStringLast != colorString) {
             //if it is moving counterclockwise
             if(colorString == "Fellow") {
@@ -189,13 +196,18 @@ public class ColorWheel {
             if(colorString == "Freen") {
                     transitions--;
             }
-           
-             
+            
+            
+            
             transitions++;
+           
             
         }
+        
+            
+        //System.out.println(colorLog);
         colorStringLast = colorString;
-        rotations = Math.floor(transitions/8);
+        rotations = transitions/8;
         SmartDashboard.putNumber("Rotations", rotations);
         SmartDashboard.putNumber("Transitions", transitions);
     }
@@ -205,26 +217,33 @@ public class ColorWheel {
         rotations = 0.0;
         transitions = 0;
 
+
     }
     public void equalColorStringLast() {
         colorStringLast = colorString;
     }
     
     public void spinWheel() {
-        if(rotations < 3) {
-            //spin the motor
+        if(rotations <= 3.2) {
             countRotations();
+            
+            colorSpinner.set(ControlMode.PercentOutput, 1);
         }else {
-            //motor power to 0
-            System.out.println("You are done");
+            //System.out.println("You are done");
+            colorSpinner.set(ControlMode.PercentOutput, 0);
         }
         
     }
+    public void setPower(double power) {
+        colorSpinner.set(ControlMode.PercentOutput, power);
+    }
+    
 
     public void selectColor() {
 
         String gameData;
         gameData = DriverStation.getInstance().getGameSpecificMessage();
+        /*
         if(gameData.length() > 0)
         {
             switch (gameData.charAt(0))
@@ -247,12 +266,15 @@ public class ColorWheel {
         }
         } else {
   
-        }
+        }*/
+        desiredColor = "Yellow";
+        
 
         if (desiredColor.equals(selectedColor)) {
-            //motor speed 0
+            colorSpinner.set(ControlMode.PercentOutput, 0);
+            //System.out.println("You are on the right color");
         }else {
-            //spin the motor
+            colorSpinner.set(ControlMode.PercentOutput, .23);   
         }
 
     }
