@@ -77,7 +77,7 @@ public class ColorWheel {
         m_colorMatcher.addColorMatch(kFreenTarget);
         colorSpinner = new TalonSRX(Ports.COLOR_SPINNER);
         colorLog = new String[24];
-        colorSpinner.configOpenloopRamp(1.0);
+        colorSpinner.configOpenloopRamp(0.5);
 
 
 
@@ -274,7 +274,7 @@ public class ColorWheel {
             colorSpinner.set(ControlMode.PercentOutput, 0);
             //System.out.println("You are on the right color");
         }else {
-            colorSpinner.set(ControlMode.PercentOutput, .23);   
+            colorSpinner.set(ControlMode.PercentOutput, .20);   
         }
 
     }

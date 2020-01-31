@@ -7,6 +7,9 @@ import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.CameraServer;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
+
 import frc.robot.Ports;
 import frc.robot.Util;
 import frc.robot.Constants;
@@ -26,10 +29,8 @@ public class TeleThreeJoysticks
     public Joystick coDriver;
     public UsbCamera cameraFront;
     public UsbCamera cameraBack;
+    public UsbCamera camera;
     public VideoSink server;
-    
-    
-    
 
     private TeleThreeJoysticks()
     {
@@ -37,10 +38,8 @@ public class TeleThreeJoysticks
         driverLeft = new Joystick(Ports.JOYSTICK_LEFT);
         driverRight = new Joystick(Ports.JOYSTICK_RIGHT);
         coDriver = new Joystick(Ports.JOYSTICK_CODRIVER);
-        cameraFront = CameraServer.getInstance().startAutomaticCapture(0);
-        cameraBack = CameraServer.getInstance().startAutomaticCapture(1);
-
-        
+        camera = CameraServer.getInstance().startAutomaticCapture(0);
+        //camera = CameraServer.setQuality(50);
         
     } 
 
@@ -66,31 +65,9 @@ public class TeleThreeJoysticks
         }
         if (driverLeft.getRawButtonReleased(5)) {
             robosystem.colorwheel.resetRotations();
-        }
-
-        
-    
-    
+        }  
 }
 
-
-
-
-       
-    
-        
-
-
-      
-    
-    
-       
-    
-
-        
-   
-
-   
     
     private void coDriver()
     {

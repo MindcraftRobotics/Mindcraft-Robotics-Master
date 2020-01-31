@@ -10,7 +10,8 @@ package frc.robot;
 import frc.robot.controlsystem.RoboSystem;
 import frc.robot.controlsystem.TeleThreeJoysticks;
 //import frc.robot.subsystem.Limelight;
-
+import edu.wpi.cscore.AxisCamera;
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.I2C;
@@ -48,6 +49,9 @@ public class Robot extends TimedRobot {
   NetworkTableEntry ta = table.getEntry("ta");
   NetworkTableEntry tv = table.getEntry("tv");
   NetworkTableEntry ledMode = table.getEntry("ledMode");
+  CameraServer cameraserver;
+  UsbCamera camera;
+  private boolean finishedDistance = false;
 
 
 
@@ -66,9 +70,16 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     teleControllers = TeleThreeJoysticks.getInstance();
     robosystem = RoboSystem.getInstance();
-    //pauloGarcia = AutoModeExecutor.getInstance();
     CameraServer.getInstance().startAutomaticCapture();
+
+    
+    
+    //pauloGarcia = AutoModeExecutor.getInstance();
+    
     //Limelight.setPipeline(0);
+
+
+    
     robosystem.drivetrain.zeroSensors();
     ledMode.setValue(1);
     robosystem.colorwheel.resetRotations();
@@ -83,6 +94,7 @@ public class Robot extends TimedRobot {
     
     //kaceyPitcher = PathManager.getInstance();
   }
+
 
   @Override
   public void robotPeriodic() {
@@ -104,6 +116,8 @@ public class Robot extends TimedRobot {
     //pauloGarcia.start();
     //NavX.resetAngle();
     valueHit = false;
+    finishedDistance = false;
+    ledMode.setValue(3);
     
   }
 
@@ -113,8 +127,57 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-     // findLeftTarget();
+   
+    if (finishedDistance == false) {
+      robosystem.drivetrain.setPower(.30, .30);
+      Timer.delay(1.2);
+      robosystem.drivetrain.setPower(.05, .30); // turn when on the right side of field
+      Timer.delay(1.5);
+      finishedDistance = true;
+    }else{
+   
+    
+
+    double x = tx.getDouble(0.0);
+    double y = ty.getDouble(0.0);
+    double area = ta.getDouble(0.0);
+    double validTarget = tv.getDouble(0.0);
+    double KpHeading = -0.0145f;
+    double min_command = 0.061f;
+    double left_command = 0.085;
+    double right_command = 0.085;
+    double KpDistance = -0.0311f;
+    double desiredArea = 11.647;
+    
+    
+      
+      
+      double heading_error = -x;
+      double steering_adjust = 0.0f;
+      double distance_error = -y;
+      if (validTarget == 1) {
+      
+        if (x > 1.0)
+        {
+          steering_adjust = KpHeading*heading_error - min_command;
+        }
+        else if (x < 1.0)
+        {
+          steering_adjust = KpHeading*heading_error + min_command;
+        
+        }
+      
+      double distance_adjust = KpDistance * (desiredArea - area); //distance_error for y offset
+      robosystem.drivetrain.setPower(left_command += steering_adjust - distance_adjust, right_command -= steering_adjust + distance_adjust);
+    }else {
+      robosystem.drivetrain.setPower(0, 0);
+    }
+  
+    }
   }
+
+     
+  
 
   
 
@@ -134,8 +197,8 @@ public class Robot extends TimedRobot {
     double validTarget = tv.getDouble(0.0);
     double KpHeading = -0.0145f;
     double min_command = 0.061f;
-    double left_command = 0.085;
-    double right_command = 0.085;
+    double left_command = 0.085; 
+    double right_command = 0.085; 
     double KpDistance = -0.0311f;
     double desiredArea = 11.647;
     if (teleControllers.driverRight.getRawButtonReleased(3)) {
@@ -179,6 +242,12 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
   }
+
+
+  
+    
+  
+
 
 
 }

@@ -1,21 +1,21 @@
-package frc.robot.subsystem;
+package frc.robot.subsystems;
 
 import java.sql.Driver;
 import java.util.concurrent.TimeUnit;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-
+import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Notifier;
-
-
-
+//import jaci.pathfinder.Pathfinder;
+//import jaci.pathfinder.PathfinderFRC;
+//import jaci.pathfinder.Trajectory;
+//import jaci.pathfinder.followers.EncoderFollower;
 
 
 
@@ -28,14 +28,16 @@ import frc.robot.controlsystem.*;
 public class Drivetrain
 {
     //talons, subsystems, etc
-    private TalonFX drivetrain_leftMaster;
-    private TalonFX drivetrain_leftSlave;
+    private TalonSRX drivetrain_leftMaster;
+    private VictorSPX drivetrain_leftSlave;
+    private VictorSPX drivetrain_leftSlave2;
+    private TalonSRX drivetrain_rightMaster;
+    private VictorSPX drivetrain_rightSlave;
+    private VictorSPX drivetrain_rightSlave2;
 
-    private TalonFX drivetrain_rightMaster;
-    private TalonFX drivetrain_rightSlave;
-
-
-   
+    //private EncoderFollower m_left_follower;
+    //private EncoderFollower m_right_follower;
+    
     private Notifier m_follower_notifier;
 
     //enums/state variables
@@ -44,26 +46,26 @@ public class Drivetrain
     //constructors
     private Drivetrain()
     {
-        drivetrain_leftMaster = new TalonFX(Ports.DRIVETRAIN_LEFT_MASTER);
-        drivetrain_leftSlave = new TalonFX(Ports.DRIVETRAIN_LEFT_SLAVE);
-       
-        drivetrain_rightMaster = new TalonFX(Ports.DRIVETRAIN_RIGHT_MASTER);
-        drivetrain_rightSlave = new TalonFX(Ports.DRIVETRAIN_RIGHT_SLAVE);
-        
+        drivetrain_leftMaster = new TalonSRX(Ports.DRIVETRAIN_LEFT_MASTER);
+        drivetrain_leftSlave = new VictorSPX(Ports.DRIVETRAIN_LEFT_SLAVE);
+        drivetrain_leftSlave2 = new VictorSPX(Ports.DRIVETRAIN_LEFT_2NDSLAVE);
+        drivetrain_rightMaster = new TalonSRX(Ports.DRIVETRAIN_RIGHT_MASTER);
+        drivetrain_rightSlave = new VictorSPX(Ports.DRIVETRAIN_RIGHT_SLAVE);
+        drivetrain_rightSlave2 = new VictorSPX(Ports.DRIVETRAIN_RIGHT_2NDSLAVE);
 
         drivetrain_rightSlave.follow(drivetrain_rightMaster);
-        
-       drivetrain_leftSlave.follow(drivetrain_leftMaster);
-
+        drivetrain_rightSlave2.follow(drivetrain_rightMaster);
+        drivetrain_leftSlave.follow(drivetrain_leftMaster);
+        drivetrain_leftSlave2.follow(drivetrain_leftMaster);
 
         drivetrain_rightMaster.configVoltageCompSaturation(Constants.Drivetrain.kMaxVoltage, 10);
         drivetrain_rightMaster.enableVoltageCompensation(true);
         drivetrain_rightMaster.setInverted(true);
         drivetrain_rightSlave.setInverted(true);
-
+        drivetrain_rightSlave2.setInverted(true);
         drivetrain_leftMaster.setInverted(false);//make sure to check when the actual bot comes around
         drivetrain_leftSlave.setInverted(false);
-
+        drivetrain_leftSlave2.setInverted(false);
         drivetrain_leftMaster.configVoltageCompSaturation(Constants.Drivetrain.kMaxVoltage, 10);
         drivetrain_leftMaster.enableVoltageCompensation(true);
         drivetrain_leftMaster.setNeutralMode(NeutralMode.Brake);
@@ -72,10 +74,10 @@ public class Drivetrain
         drivetrain_rightMaster.configNominalOutputReverse(0, 10);
         drivetrain_leftMaster.configNominalOutputForward(0, 10);
         drivetrain_leftMaster.configNominalOutputReverse(0, 10);
-        drivetrain_rightMaster.configPeakOutputForward(.75, 10);
-        drivetrain_rightMaster.configPeakOutputReverse(-.75, 10);
-        drivetrain_leftMaster.configPeakOutputForward(.75, 10);
-        drivetrain_leftMaster.configPeakOutputReverse(-.75, 10);
+        drivetrain_rightMaster.configPeakOutputForward(1, 10);
+        drivetrain_rightMaster.configPeakOutputReverse(-1, 10);
+        drivetrain_leftMaster.configPeakOutputForward(1, 10);
+        drivetrain_leftMaster.configPeakOutputReverse(-1, 10);
         
         drivetrain_leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 30);
         drivetrain_rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 30);
@@ -118,7 +120,7 @@ public class Drivetrain
      public void setPower(double left, double right)
     {
      drivetrain_leftMaster.set(ControlMode.PercentOutput, left);
-     drivetrain_rightMaster.set(ControlMode.PercentOutput, right); 
+     drivetrain_rightMaster.set(ControlMode.PercentOutput, right);
     }
 
     public void setCurrentClosedLoop(double left, double right) //joystick times 40, ANYTHING MORE THAN 40 BUSTS BREAKER!!!
@@ -188,7 +190,7 @@ public class Drivetrain
       return drivetrain_rightMaster.getSelectedSensorPosition();
     }
     
-    /*
+    
     public void limelightTurning(double leftCommand, double rightCommand)
     {
 
@@ -216,7 +218,7 @@ public class Drivetrain
 	  drivetrain_rightMaster.set(ControlMode.PercentOutput, rightVolts/Constants.Drivetrain.kMaxVoltage);
     }
 
-   */
+   
    
     public void update()
     {
