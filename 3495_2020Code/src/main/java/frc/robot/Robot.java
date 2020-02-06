@@ -26,6 +26,7 @@ import edu.wpi.first.networktables.*;
 
 import frc.robot.subsystem.Drivetrain;
 //import frc.robot.subsystem.Limelight;
+import frc.robot.subsystem.NavX;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -118,6 +119,8 @@ public class Robot extends TimedRobot {
     valueHit = false;
     finishedDistance = false;
     ledMode.setValue(3);
+
+    
     
   }
 
@@ -131,8 +134,8 @@ public class Robot extends TimedRobot {
     if (finishedDistance == false) {
       robosystem.drivetrain.setPower(.30, .30);
       Timer.delay(1.2);
-      robosystem.drivetrain.setPower(.05, .30); // turn when on the right side of field
-      Timer.delay(1.5);
+      robosystem.drivetrain.setPower(.15, .33); // turn when on the right side of field
+      Timer.delay(2.3);
       finishedDistance = true;
     }else{
    
@@ -174,6 +177,7 @@ public class Robot extends TimedRobot {
     }
   
     }
+    
   }
 
      
@@ -186,6 +190,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    System.out.println(robosystem.navx.currentAngle());
     robosystem.colorwheel.setPower(teleControllers.coDriver.getY());
     robosystem.colorwheel.readColor();
     //robosystem.colorwheel.countRotations();

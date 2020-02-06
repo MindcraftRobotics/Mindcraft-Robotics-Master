@@ -278,6 +278,10 @@ public class ColorWheel {
         }
 
     }
+    public void update()
+    {
+
+    }
    
    
 

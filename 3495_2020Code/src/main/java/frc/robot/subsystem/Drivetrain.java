@@ -33,6 +33,8 @@ public class Drivetrain
 
     private TalonFX drivetrain_rightMaster;
     private TalonFX drivetrain_rightSlave;
+    private Encoder leftEncoder;
+    private Encoder rightEncoder;
 
 
    
@@ -49,6 +51,7 @@ public class Drivetrain
        
         drivetrain_rightMaster = new TalonFX(Ports.DRIVETRAIN_RIGHT_MASTER);
         drivetrain_rightSlave = new TalonFX(Ports.DRIVETRAIN_RIGHT_SLAVE);
+
         
 
         drivetrain_rightSlave.follow(drivetrain_rightMaster);
@@ -60,6 +63,7 @@ public class Drivetrain
         drivetrain_rightMaster.enableVoltageCompensation(true);
         drivetrain_rightMaster.setInverted(true);
         drivetrain_rightSlave.setInverted(true);
+        
 
         drivetrain_leftMaster.setInverted(false);//make sure to check when the actual bot comes around
         drivetrain_leftSlave.setInverted(false);
@@ -76,9 +80,10 @@ public class Drivetrain
         drivetrain_rightMaster.configPeakOutputReverse(-.75, 10);
         drivetrain_leftMaster.configPeakOutputForward(.75, 10);
         drivetrain_leftMaster.configPeakOutputReverse(-.75, 10);
-        
-        drivetrain_leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 30);
-        drivetrain_rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 30);
+
+      
+        drivetrain_leftMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 30);
+        drivetrain_rightMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 30);
 
         drivetrain_leftMaster.setSensorPhase(true);
         drivetrain_rightMaster.setSensorPhase(true);
