@@ -22,8 +22,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.networktables.*;
 
-
-
 import frc.robot.subsystem.Drivetrain;
 //import frc.robot.subsystem.Limelight;
 import frc.robot.subsystem.NavX;
@@ -73,24 +71,13 @@ public class Robot extends TimedRobot {
     robosystem = RoboSystem.getInstance();
     CameraServer.getInstance().startAutomaticCapture();
 
-    
-    
     //pauloGarcia = AutoModeExecutor.getInstance();
     
     //Limelight.setPipeline(0);
-
-
-    
     robosystem.drivetrain.zeroSensors();
     ledMode.setValue(1);
     robosystem.colorwheel.resetRotations();
     robosystem.colorwheel.equalColorStringLast();
-    
-   
-    
-
-
-    
     compressor = new Compressor(0);
     
     //kaceyPitcher = PathManager.getInstance();
@@ -147,10 +134,10 @@ public class Robot extends TimedRobot {
     double validTarget = tv.getDouble(0.0);
     double KpHeading = -0.0145f;
     double min_command = 0.061f;
-    double left_command = 0.085;
-    double right_command = 0.085;
+    double left_command = 0.0;
+    double right_command = 0.0;
     double KpDistance = -0.0311f;
-    double desiredArea = 11.647;
+    double desiredArea = 17.647;
     
     
       
@@ -171,7 +158,7 @@ public class Robot extends TimedRobot {
         }
       
       double distance_adjust = KpDistance * (desiredArea - area); //distance_error for y offset
-      robosystem.drivetrain.setPower(left_command += steering_adjust - distance_adjust, right_command -= steering_adjust + distance_adjust);
+      robosystem.drivetrain.setPower(left_command -= steering_adjust + distance_adjust, right_command += steering_adjust - distance_adjust);
     }else {
       robosystem.drivetrain.setPower(0, 0);
     }
@@ -190,7 +177,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    System.out.println(robosystem.navx.currentAngle());
+
     robosystem.colorwheel.setPower(teleControllers.coDriver.getY());
     robosystem.colorwheel.readColor();
     //robosystem.colorwheel.countRotations();
@@ -204,13 +191,9 @@ public class Robot extends TimedRobot {
     double min_command = 0.061f;
     double left_command = 0.085; 
     double right_command = 0.085; 
-    double KpDistance = -0.0311f;
-    double desiredArea = 11.647;
-    if (teleControllers.driverRight.getRawButtonReleased(3)) {
-      ledMode.setValue(3);
-    }else if (teleControllers.driverRight.getRawButtonReleased(4)) {
-      ledMode.setValue(1);
-    }
+    double KpDistance = -0.0341f;
+    double desiredArea = 14.647;
+    ledMode.setValue(3);
     if (teleControllers.driverLeft.getRawButton(1)) {
       
       
@@ -232,12 +215,13 @@ public class Robot extends TimedRobot {
       }
       
       double distance_adjust = KpDistance * (desiredArea - area); //distance_error for y offset
-      robosystem.drivetrain.setPower(left_command += steering_adjust - distance_adjust, right_command -= steering_adjust + distance_adjust);
+      robosystem.drivetrain.setPower(left_command -= steering_adjust - distance_adjust, right_command += steering_adjust + distance_adjust);
     }else {
       robosystem.drivetrain.setPower(0, 0);
     }
   
     }
+   
   }
 
  

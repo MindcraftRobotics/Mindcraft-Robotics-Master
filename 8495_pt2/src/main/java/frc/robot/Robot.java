@@ -13,16 +13,17 @@ import frc.robot.controlsystem.TeleThreeJoysticks;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.networktables.*;
-
-
-
+import jaci.pathfinder.*;
+import jaci.pathfinder.modifiers.TankModifier;
 import frc.robot.subsystem.Drivetrain;
+import jaci.pathfinder.followers.EncoderFollower;
 //import frc.robot.subsystem.Limelight;
 
 /**
@@ -47,15 +48,8 @@ public class Robot extends TimedRobot {
   NetworkTableEntry ty = table.getEntry("ty");
   NetworkTableEntry ta = table.getEntry("ta");
   NetworkTableEntry ledMode = table.getEntry("ledMode");
-
-
-
-  
- 
-
-  
-  
-    
+  EncoderFollower left;
+  EncoderFollower right;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -70,12 +64,20 @@ public class Robot extends TimedRobot {
     //Limelight.setPipeline(0);
     robosystem.drivetrain.zeroSensors();
     ledMode.setNumber(1);
-    
-   
-    
-
 
     
+    Waypoint[] points = new Waypoint[] {
+      new Waypoint(-4, -1, Pathfinder.d2r(-45)),      // Waypoint @ x=-4, y=-1, exit angle=-45 degrees
+      new Waypoint(-2, -2, 0),                        // Waypoint @ x=-2, y=-2, exit angle=0 radians
+      new Waypoint(0, 0, 0)                           // Waypoint @ x=0, y=0,   exit angle=0 radians
+    };
+    Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, 0.05, 1.7, 2.0, 60.0);
+    Trajectory trajectory = Pathfinder.generate(points, config);
+    TankModifier modifier = new TankModifier(trajectory).modify(0.5);
+
+    left = new EncoderFollower(modifier.getLeftTrajectory());
+    right = new EncoderFollower(modifier.getRightTrajectory());
+
     compressor = new Compressor(0);
     
     //kaceyPitcher = PathManager.getInstance();
@@ -112,8 +114,6 @@ public class Robot extends TimedRobot {
      // findLeftTarget();
   }
 
-  
-
   /**
    * This function is called periodically during operator control.
    */
@@ -121,7 +121,12 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     //double current = compressor.getCompressorCurrent();
     ledMode.setNumber(1);
-    
+    left.configureEncoder(0, 2048, 6.0);
+    right.configureEncoder(0, 2048, 6.0);
+    //left.configurePIDVA(1.0, 0, 0, 1 / max_velocity, 0);
+    //right.configurePIDVA(1.0, 0.0, 0.0, 1.0 / max_velocity, 0);
+    double l = left.calculate((int)robosystem.drivetrain.getPostition());
+    double r = right.calculate((int)robosystem.drivetrain.getPostition());
     
     teleControllers.update();
     double x = tx.getDouble(0.0);
@@ -149,49 +154,12 @@ public class Robot extends TimedRobot {
       }
       double distance_adjust = KpDistance * distance_error;
       robosystem.drivetrain.setPower(left_command -= steering_adjust - distance_adjust, right_command += steering_adjust + distance_adjust);
-   
-  
     }
   }
-
-   
-
-    
-   
-
-
-   
-
-
-   
-  
-    
-
-  
-  
-
   /**
    * This function is called periodically during test mode.
    */
   @Override
   public void testPeriodic() {
   }
-
-       
-
-
- 
-
-
-
-
 }
-  
-
-
-
-
-
-
-
-

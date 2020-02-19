@@ -56,37 +56,12 @@ public class TeleThreeJoysticks
         -1.0, 1.0);
         
         robosystem.drivetrain.setPower(left, right);
-        
-    
-    
+
 }
-
-
-
-
-       
-    
-        
-
-
-      
-    
-    
-       
-    
-
-        
-   
-
-   
-    
     private void coDriver()
     {
         
-    }
-
-    
-    
+    }    
     public void update()
     {
         driver();
@@ -100,5 +75,5 @@ public class TeleThreeJoysticks
         if(instance == null) instance = new TeleThreeJoysticks();
         return instance;
 
-}
+    }
 }

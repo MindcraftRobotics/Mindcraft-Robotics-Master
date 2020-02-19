@@ -8,11 +8,15 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.fasterxml.jackson.databind.util.ArrayBuilders.DoubleBuilder;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Notifier;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
+import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 
 
 
@@ -27,11 +31,14 @@ import frc.robot.controlsystem.*;
 public class Drivetrain
 {
     //talons, subsystems, etc
-    private TalonSRX drivetrain_leftMaster;
-    private TalonSRX drivetrain_leftSlave;
+    private TalonFX drivetrain_leftMaster;
+    private TalonFX drivetrain_leftSlave;
 
-    private TalonSRX drivetrain_rightMaster;
-    private TalonSRX drivetrain_rightSlave;
+    private TalonFX drivetrain_rightMaster;
+    private TalonFX drivetrain_rightSlave;
+    private TalonFXSensorCollection lFeedbackDevice;
+    private TalonFXSensorCollection rFeedbackDevice;
+
 
 
    
@@ -43,16 +50,17 @@ public class Drivetrain
     //constructors
     private Drivetrain()
     {
-        drivetrain_leftMaster = new TalonSRX(Ports.DRIVETRAIN_LEFT_MASTER);
-        drivetrain_leftSlave = new TalonSRX(Ports.DRIVETRAIN_LEFT_SLAVE);
+        drivetrain_leftMaster = new TalonFX(Ports.DRIVETRAIN_LEFT_MASTER);
+        drivetrain_leftSlave = new TalonFX(Ports.DRIVETRAIN_LEFT_SLAVE);
        
-        drivetrain_rightMaster = new TalonSRX(Ports.DRIVETRAIN_RIGHT_MASTER);
-        drivetrain_rightSlave = new TalonSRX(Ports.DRIVETRAIN_RIGHT_SLAVE);
+        drivetrain_rightMaster = new TalonFX(Ports.DRIVETRAIN_RIGHT_MASTER);
+        drivetrain_rightSlave = new TalonFX(Ports.DRIVETRAIN_RIGHT_SLAVE);
        
 
         drivetrain_rightSlave.follow(drivetrain_rightMaster);
         
        drivetrain_leftSlave.follow(drivetrain_leftMaster);
+
 
 
         drivetrain_rightMaster.configVoltageCompSaturation(Constants.Drivetrain.kMaxVoltage, 10);
@@ -76,8 +84,9 @@ public class Drivetrain
         drivetrain_leftMaster.configPeakOutputForward(.75, 10);
         drivetrain_leftMaster.configPeakOutputReverse(-.75, 10);
         
-        drivetrain_leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 30);
-        drivetrain_rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 30);
+        drivetrain_leftMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor.QuadEncoder, 0, 30);
+        drivetrain_rightMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor.QuadEncoder, 0, 30);
+
 
         drivetrain_leftMaster.setSensorPhase(true);
         drivetrain_rightMaster.setSensorPhase(true);
@@ -114,6 +123,9 @@ public class Drivetrain
         /* @param left input to left side of drivetrain, in [-1.0, 1.0]
         * @param right input to right side of drivetrain, in [-1.0, 1.0]
         */
+   public double getPostition() {
+      return lFeedbackDevice.getIntegratedSensorPosition();
+   }
      public void setPower(double left, double right)
     {
      drivetrain_leftMaster.set(ControlMode.PercentOutput, left);
@@ -159,7 +171,7 @@ public class Drivetrain
      
      leftVolts = (left > 0) ?
         Constants.Drivetrain.Left.Forward.kStaticFrictionFeedForward:
-        Constants.Drivetrain.Left.Reverse.kStaticFrictionFeedForward;
+        Constants.Drivetrain.Left.Reverse.kStaticFrictionFeedForward; 
      leftVolts += left * ((left > 0) ?
         Constants.Drivetrain.Left.Forward.kVoltsPerFootPerSecond:
         Constants.Drivetrain.Left.Reverse.kVoltsPerFootPerSecond);

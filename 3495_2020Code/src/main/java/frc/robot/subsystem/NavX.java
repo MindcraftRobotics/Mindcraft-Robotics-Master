@@ -35,6 +35,12 @@ public class NavX{
         currentAngle = gyro.getCompassHeading();
 
     }
+    private static NavX instance = null;
+    public static NavX getInstance() {
+        if(instance == null) instance = new NavX();
+        return instance;
+    }
+
 
    
 
@@ -46,12 +52,7 @@ public class NavX{
     }
         
 
-    private static NavX instance = null;
-    public static NavX getInstance() {
-        if(instance == null) instance = new NavX();
-        return instance;
-    }
-
+   
     public void update()
     {
 

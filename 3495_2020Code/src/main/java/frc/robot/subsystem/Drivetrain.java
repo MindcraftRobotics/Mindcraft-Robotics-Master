@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.fasterxml.jackson.databind.ser.impl.FailingSerializer;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Notifier;
@@ -56,17 +57,17 @@ public class Drivetrain
 
         drivetrain_rightSlave.follow(drivetrain_rightMaster);
         
-       drivetrain_leftSlave.follow(drivetrain_leftMaster);
+        drivetrain_leftSlave.follow(drivetrain_leftMaster);
 
 
         drivetrain_rightMaster.configVoltageCompSaturation(Constants.Drivetrain.kMaxVoltage, 10);
         drivetrain_rightMaster.enableVoltageCompensation(true);
-        drivetrain_rightMaster.setInverted(true);
-        drivetrain_rightSlave.setInverted(true);
+        drivetrain_rightMaster.setInverted(false);
+        drivetrain_rightSlave.setInverted(false);
         
 
-        drivetrain_leftMaster.setInverted(false);//make sure to check when the actual bot comes around
-        drivetrain_leftSlave.setInverted(false);
+        drivetrain_leftMaster.setInverted(true);//make sure to check when the actual bot comes around
+        drivetrain_leftSlave.setInverted(true);
 
         drivetrain_leftMaster.configVoltageCompSaturation(Constants.Drivetrain.kMaxVoltage, 10);
         drivetrain_leftMaster.enableVoltageCompensation(true);

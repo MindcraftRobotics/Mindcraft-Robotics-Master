@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
@@ -27,6 +28,8 @@ public class Robot extends TimedRobot {
   TalonFX talonRight1 = new TalonFX(4);
   TalonFX talonLeft2 = new TalonFX(5);
   TalonFX talonRight3 = new TalonFX(3);
+  TalonSRX shooterTalon = new TalonSRX(2);
+  TalonSRX succTalon = new TalonSRX(5);
   Joystick left = new Joystick(0);
   Joystick right = new Joystick(1);
   //Joystick controller = new Joystick(2);
@@ -59,6 +62,13 @@ public class Robot extends TimedRobot {
   talonRight1.set(ControlMode.PercentOutput, right.getY());
   talonLeft0.set(ControlMode.PercentOutput, left.getY());
   talonRight1.setInverted(true);
+  if(left.getRawButton(1)) {
+    shooterTalon.set(ControlMode.PercentOutput, 1);
+    succTalon.set(ControlMode.PercentOutput, -.5);
+  }
+  if (left.getRawButton(2)) {
+    succTalon.set(ControlMode.PercentOutput, -.5);
+  }
  
   }
   

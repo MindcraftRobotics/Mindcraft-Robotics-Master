@@ -32,6 +32,7 @@ public class TeleThreeJoysticks
     public UsbCamera camera;
     public VideoSink server;
 
+
     private TeleThreeJoysticks()
     {
         robosystem = RoboSystem.getInstance();
@@ -65,7 +66,9 @@ public class TeleThreeJoysticks
         }
         if (driverLeft.getRawButtonReleased(5)) {
             robosystem.colorwheel.resetRotations();
+          
         }  
+       
 }
 
     

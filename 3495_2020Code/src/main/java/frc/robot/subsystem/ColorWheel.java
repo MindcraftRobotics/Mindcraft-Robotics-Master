@@ -167,7 +167,7 @@ public class ColorWheel {
     /*SmartDashboard.putNumber("Red", detectedColor.red);
     SmartDashboard.putNumber("Green", detectedColor.green);
     SmartDashboard.putNumber("Blue", detectedColor.blue);*/
-    SmartDashboard.putNumber("Red", red);
+    /*SmartDashboard.putNumber("Red", red);
     SmartDashboard.putNumber("Green", green);
     SmartDashboard.putNumber("Blue", blue);
 
@@ -182,7 +182,7 @@ public class ColorWheel {
     SmartDashboard.putNumber("Confidence", match.confidence);
     SmartDashboard.putString("Detected Color", colorString);
     SmartDashboard.putString("Selected Color", selectedColor);
-    SmartDashboard.putNumber("Total Intensity", total);
+    SmartDashboard.putNumber("Total Intensity", total);*/
     
     }
     public void countRotations() {
