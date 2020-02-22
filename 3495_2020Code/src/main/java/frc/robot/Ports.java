@@ -14,7 +14,11 @@ public class Ports {             // public: we want it to be accessible, right?
     public static final int DRIVETRAIN_RIGHT_MASTER = 3;
     public static final int DRIVETRAIN_RIGHT_SLAVE = 4;
     public static final int COLOR_SPINNER = 5;
- 
+    public static final int SHOOTER_TALON_OUT = 6;
+    public static final int SHOOTER_TALON_IN = 7;
+    
+
+
 
     public static final int JOYSTICK_LEFT = 1;
     public static final int JOYSTICK_RIGHT = 0;

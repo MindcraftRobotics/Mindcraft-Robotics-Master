@@ -12,8 +12,11 @@ public class Lift extends PIDSubsystem{
     TalonSRX liftTalon = new TalonSRX(1);
     Encoder m_liftEncoder = new Encoder(0,1);
     private Lift() {
-        super("Lift", 2.0, 0.0, 0.0);
+        super("Lift", 1.0, 0.0, 0.0);
         liftTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
+        this.setPercentTolerance(5.0);
+        this.enable();
+        this.ground();
 
     }
     
@@ -34,23 +37,37 @@ public class Lift extends PIDSubsystem{
     }
     public void lvl1() {
         this.enable();
-        this.setSetpoint(1);
+        this.setSetpoint(2000);
     }
     public void lvl2() {
         this.enable();
-        this.setSetpoint(2);
+        this.setSetpoint(3000);
     }
-    public void ground() {
+    public void ground() {  
         this.enable();
-        this.setSetpoint(0);
+        this.setSetpoint(10);
 
     }
-    protected void usePIDOutput(double output) {
-        liftTalon.set(ControlMode.Current, output);
+    public double getDistance() {
+        return m_liftEncoder.getDistance();
     }
-    public void setPower(double power) {
+    public double getDistancePerPulse() {
+        return m_liftEncoder.getDistancePerPulse();
+    }
+    public void setDistancePerPulse(int distancePerPulse) {
+        m_liftEncoder.setDistancePerPulse(distancePerPulse);
+    }
+    
+    public void manualAdjust(double power) {
         this.disable();
         liftTalon.set(ControlMode.PercentOutput, power);
+    }
+    protected void usePIDOutput(double output) {
+        liftTalon.set(ControlMode.Velocity, output);
+    }
+  
+    public void setPower(double power) {
+        this.enable();
         this.setSetpointRelative(power);
     }
    

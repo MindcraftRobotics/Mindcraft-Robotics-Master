@@ -4,49 +4,35 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
+
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 /**
  * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
+ * functions corresponding to each mode, as described in the TimedRobot
  * documentation. If you change the name of this class or the package after
  * creating this project, you must also update the build.gradle file in the
  * project.
  */
 public class Robot extends TimedRobot {
-  
-  TalonFX talonLeft0 = new TalonFX(9);
-  TalonFX talonRight1 = new TalonFX(4);
-  TalonFX talonLeft2 = new TalonFX(10);
-  TalonFX talonRight3 = new TalonFX(3);
-  TalonSRX shooterTalon = new TalonSRX(2);
-  TalonSRX succTalon = new TalonSRX(5);
-  Joystick left = new Joystick(0);
-  Joystick right = new Joystick(1);
-  //Joystick controller = new Joystick(2);
-  
+  private static final String kDefaultAuto = "Default";
+  private static final String kCustomAuto = "My Auto";
+  private String m_autoSelected;
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
    */
   @Override
   public void robotInit() {
-    succTalon.configPeakOutputForward(.75);
-    succTalon.configPeakOutputReverse(-.75);
-    succTalon.setNeutralMode(NeutralMode.Coast);
-   // m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-   /// m_chooser.addOption("My Auto", kCustomAuto);
-    //SmartDashboard.putData("Auto choices", m_chooser);
+    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
+    m_chooser.addOption("My Auto", kCustomAuto);
+    SmartDashboard.putData("Auto choices", m_chooser);
   }
 
   /**
@@ -59,35 +45,24 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-  
-
-  talonRight3.follow(talonRight1);
-  talonLeft2.follow(talonLeft0);
-  talonRight1.set(ControlMode.PercentOutput, right.getY());
-  talonLeft0.set(ControlMode.PercentOutput, left.getY());
-  talonRight1.setInverted(true);
-
-  if (left.getRawButton(2)) {
-    succTalon.set(ControlMode.PercentOutput, -.75);
-  }else if(left.getRawButton(1)){
-    succTalon.set(ControlMode.PercentOutput, -.75);
-    shooterTalon.set(ControlMode.PercentOutput, 1);
-  }else {
-    succTalon.set(ControlMode.PercentOutput, 0);
-    shooterTalon.set(ControlMode.PercentOutput, 0);
   }
 
- 
-  
-  
- 
-  }
-  
+  /**
+   * This autonomous (along with the chooser code above) shows how to select
+   * between different autonomous modes using the dashboard. The sendable
+   * chooser code works with the Java SmartDashboard. If you prefer the
+   * LabVIEW Dashboard, remove all of the chooser code and uncomment the
+   * getString line to get the auto name from the text box below the Gyro
+   *
+   * <p>You can add additional auto modes by adding additional comparisons to
+   * the switch structure below with additional strings. If using the
+   * SendableChooser make sure to add them to the chooser code above as well.
+   */
   @Override
   public void autonomousInit() {
-   // m_autoSelected = m_chooser.getSelected();
+    m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    //System.out.println("Auto selected: " + m_autoSelected);
+    System.out.println("Auto selected: " + m_autoSelected);
   }
 
   /**
@@ -95,24 +70,22 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    ////switch (m_autoSelected) {
-     // case kCustomAuto:
+    switch (m_autoSelected) {
+      case kCustomAuto:
         // Put custom auto code here
-      ////  break;
-      ///case kDefaultAuto:
-      //default:
+        break;
+      case kDefaultAuto:
+      default:
         // Put default auto code here
-        //break;
+        break;
     }
-  
+  }
 
   /**
    * This function is called periodically during operator control.
    */
   @Override
   public void teleopPeriodic() {
-    
-   
   }
 
   /**
