@@ -82,6 +82,12 @@ public class Robot extends TimedRobot {
     
     //kaceyPitcher = PathManager.getInstance();
   }
+  
+  @Override
+  public void teleopInit() {
+
+   
+  }
 
 
   @Override
@@ -106,8 +112,6 @@ public class Robot extends TimedRobot {
     valueHit = false;
     finishedDistance = false;
     ledMode.setValue(3);
-
-    
     
   }
 
@@ -124,6 +128,7 @@ public class Robot extends TimedRobot {
       robosystem.drivetrain.setPower(.15, .33); // turn when on the right side of field
       Timer.delay(2.3);
       finishedDistance = true;
+      
     }else{
    
     
@@ -231,21 +236,5 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
   }
-
-
-  
-    
-  
-
-
-
 }
   
-
-
-
-
-
-
-
-

@@ -30,10 +30,10 @@ public class Drivetrain
 {
     //talons, subsystems, etc
     private TalonFX drivetrain_leftMaster;
-    private TalonFX drivetrain_leftSlave;
+    private TalonFX drivetrain_leftMaster2;
 
     private TalonFX drivetrain_rightMaster;
-    private TalonFX drivetrain_rightSlave;
+    private TalonFX drivetrain_rightMaster2;
     private Encoder leftEncoder;
     private Encoder rightEncoder;
 
@@ -48,63 +48,119 @@ public class Drivetrain
     private Drivetrain()
     {
         drivetrain_leftMaster = new TalonFX(Ports.DRIVETRAIN_LEFT_MASTER);
-        drivetrain_leftSlave = new TalonFX(Ports.DRIVETRAIN_LEFT_SLAVE);
+        drivetrain_leftMaster2 = new TalonFX(Ports.DRIVETRAIN_LEFT_MASTER2);
        
         drivetrain_rightMaster = new TalonFX(Ports.DRIVETRAIN_RIGHT_MASTER);
-        drivetrain_rightSlave = new TalonFX(Ports.DRIVETRAIN_RIGHT_SLAVE);
+        drivetrain_rightMaster2 = new TalonFX(Ports.DRIVETRAIN_RIGHT_MASTER2);
 
         
 
-        drivetrain_rightSlave.follow(drivetrain_rightMaster);
+        //drivetrain_rightSlave.follow(drivetrain_rightMaster);
         
-        drivetrain_leftSlave.follow(drivetrain_leftMaster);
-
+        //drivetrain_leftSlave.follow(drivetrain_leftMaster);
+      
+      // With the falcon motors, master and slave talons won't work, therefore I changed all the slave talons to it's own master talons temporarilys
 
         drivetrain_rightMaster.configVoltageCompSaturation(Constants.Drivetrain.kMaxVoltage, 10);
-        drivetrain_rightMaster.enableVoltageCompensation(true);
-        drivetrain_rightMaster.setInverted(false);
-        drivetrain_rightSlave.setInverted(false);
+        drivetrain_rightMaster.enableVoltageCompensation(true); 
+        drivetrain_rightMaster.setInverted(false); // originally false
+        drivetrain_rightMaster2.setInverted(false); // originally false
         
 
-        drivetrain_leftMaster.setInverted(true);//make sure to check when the actual bot comes around
-        drivetrain_leftSlave.setInverted(true);
+        drivetrain_leftMaster.setInverted(true);//make sure to check when the actual bot comes around originally true
+        drivetrain_leftMaster2.setInverted(true); // originally true
 
         drivetrain_leftMaster.configVoltageCompSaturation(Constants.Drivetrain.kMaxVoltage, 10);
+        drivetrain_leftMaster2.configVoltageCompSaturation(Constants.Drivetrain.kMaxVoltage, 10);
         drivetrain_leftMaster.enableVoltageCompensation(true);
+        drivetrain_leftMaster2.enableVoltageCompensation(true);
         drivetrain_leftMaster.setNeutralMode(NeutralMode.Brake);
+        drivetrain_leftMaster2.setNeutralMode(NeutralMode.Brake);
         drivetrain_rightMaster.setNeutralMode(NeutralMode.Brake);
+        drivetrain_rightMaster2.setNeutralMode(NeutralMode.Brake);
+
         drivetrain_rightMaster.configNominalOutputForward(0, 10);
+        drivetrain_rightMaster2.configNominalOutputForward(0, 10);
+
         drivetrain_rightMaster.configNominalOutputReverse(0, 10);
+        drivetrain_rightMaster2.configNominalOutputReverse(0, 10);
+
         drivetrain_leftMaster.configNominalOutputForward(0, 10);
+        drivetrain_leftMaster2.configNominalOutputForward(0, 10);
         drivetrain_leftMaster.configNominalOutputReverse(0, 10);
+        drivetrain_leftMaster2.configNominalOutputReverse(0, 10);
+        
         drivetrain_rightMaster.configPeakOutputForward(.75, 10);
+        drivetrain_rightMaster2.configPeakOutputForward(.75, 10);
+
         drivetrain_rightMaster.configPeakOutputReverse(-.75, 10);
+        drivetrain_rightMaster2.configPeakOutputReverse(-.75, 10);
+
         drivetrain_leftMaster.configPeakOutputForward(.75, 10);
+        drivetrain_leftMaster2.configPeakOutputForward(.75, 10);
         drivetrain_leftMaster.configPeakOutputReverse(-.75, 10);
+        drivetrain_leftMaster2.configPeakOutputReverse(-.75, 10);
+
 
       
         drivetrain_leftMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 30);
+        drivetrain_leftMaster2.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 30);
+
         drivetrain_rightMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 30);
+        drivetrain_rightMaster2.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 30);
+
 
         drivetrain_leftMaster.setSensorPhase(true);
+        drivetrain_leftMaster2.setSensorPhase(true);
+
         drivetrain_rightMaster.setSensorPhase(true);
+        drivetrain_rightMaster2.setSensorPhase(true);
+
 
         drivetrain_rightMaster.selectProfileSlot(0, 0);
+        drivetrain_rightMaster2.selectProfileSlot(0, 0);
+
         drivetrain_rightMaster.config_kP(0, .2, 10);
+        drivetrain_rightMaster2.config_kP(0, .2, 10);
+
         drivetrain_rightMaster.config_kI(0, 0, 10);
+        drivetrain_rightMaster2.config_kI(0, 0, 10);
+
         drivetrain_rightMaster.config_kD(0, 0, 10);
+        drivetrain_rightMaster2.config_kD(0, 0, 10);
+
         drivetrain_rightMaster.config_kF(0, .2, 10);
+        drivetrain_rightMaster2.config_kF(0, .2, 10);
+
 
         drivetrain_leftMaster.selectProfileSlot(0, 0);
+        drivetrain_leftMaster2.selectProfileSlot(0, 0);
+
         drivetrain_leftMaster.config_kP(0, .2, 10);
+        drivetrain_leftMaster2.config_kP(0, .2, 10);
+
         drivetrain_leftMaster.config_kI(0, 0, 10);
+        drivetrain_leftMaster2.config_kI(0, 0, 10);
+
         drivetrain_leftMaster.config_kD(0, 0, 10);
+        drivetrain_leftMaster2.config_kD(0, 0, 10);
+
         drivetrain_leftMaster.config_kF(0, .2, 10);
+        drivetrain_leftMaster2.config_kF(0, .2, 10);
+
 
         drivetrain_leftMaster.configMotionCruiseVelocity(15000, 30);
+        drivetrain_leftMaster2.configMotionCruiseVelocity(15000, 30);
+
         drivetrain_rightMaster.configMotionCruiseVelocity(15000, 30);
+        drivetrain_rightMaster2.configMotionCruiseVelocity(15000, 30);
+
         drivetrain_leftMaster.configMotionAcceleration(6000, 30);
+        drivetrain_leftMaster2.configMotionAcceleration(6000, 30);
+
         drivetrain_rightMaster.configMotionAcceleration(6000, 30);
+        drivetrain_rightMaster2.configMotionAcceleration(6000, 30);
+
       
       
     }
@@ -124,13 +180,22 @@ public class Drivetrain
      public void setPower(double left, double right)
     {
      drivetrain_leftMaster.set(ControlMode.PercentOutput, left);
+     drivetrain_leftMaster2.set(ControlMode.PercentOutput, left);
+
+     
      drivetrain_rightMaster.set(ControlMode.PercentOutput, right); 
+     drivetrain_rightMaster2.set(ControlMode.PercentOutput, right); 
+
     }
 
     public void setCurrentClosedLoop(double left, double right) //joystick times 40, ANYTHING MORE THAN 40 BUSTS BREAKER!!!
     {
        drivetrain_leftMaster.set(ControlMode.Current, left*40);
+       drivetrain_leftMaster2.set(ControlMode.Current, left*40);
+
        drivetrain_rightMaster.set(ControlMode.Current, right*40);
+       drivetrain_rightMaster2.set(ControlMode.Current, right*40);
+
     }
 
     public void velocityControl(double left, double right)
@@ -138,31 +203,49 @@ public class Drivetrain
        double targetVelLeft = left * 1000 * 4096 / 600;  // left * RPM * encoder units/ encoder units
        double targetVelRight = right * 1000 * 4096 / 600; // right * RPM * encoder units/ encoder units
        drivetrain_leftMaster.set(ControlMode.Velocity, targetVelLeft);
+       drivetrain_leftMaster2.set(ControlMode.Velocity, targetVelLeft);
+
        drivetrain_rightMaster.set(ControlMode.Velocity, targetVelRight);
+       drivetrain_rightMaster2.set(ControlMode.Velocity, targetVelRight);
+
     }
     public void velocityControlAuton(double left, double right)
     {
        double targetVelLeft = left * 70.5 * 4096 / 600;  // left * RPM * encoder units/ encoder units
        double targetVelRight = right * 70.5 * 4096 / 600; // right * RPM * encoder units/ encoder units
        drivetrain_leftMaster.set(ControlMode.Velocity, targetVelLeft);
+       drivetrain_leftMaster2.set(ControlMode.Velocity, targetVelLeft);
+
        drivetrain_rightMaster.set(ControlMode.Velocity, targetVelRight);
+       drivetrain_rightMaster2.set(ControlMode.Velocity, targetVelRight);
+
     }
     public void PercentOutputAuton(double left, double right)
     {
        drivetrain_leftMaster.set(ControlMode.PercentOutput, left);
+       drivetrain_leftMaster2.set(ControlMode.PercentOutput, left);
+
        drivetrain_rightMaster.set(ControlMode.PercentOutput, right);
+       drivetrain_rightMaster2.set(ControlMode.PercentOutput, right);
+
     }
 
    public void sendInputVolts(double leftVoltage, double rightVoltage)
    {
       drivetrain_leftMaster.set(ControlMode.PercentOutput, leftVoltage/Constants.Drivetrain.kMaxVoltage);
-		drivetrain_rightMaster.set(ControlMode.PercentOutput, rightVoltage/Constants.Drivetrain.kMaxVoltage);
+      drivetrain_leftMaster2.set(ControlMode.PercentOutput, leftVoltage/Constants.Drivetrain.kMaxVoltage);
+
+      drivetrain_rightMaster.set(ControlMode.PercentOutput, rightVoltage/Constants.Drivetrain.kMaxVoltage);
+      drivetrain_rightMaster2.set(ControlMode.PercentOutput, rightVoltage/Constants.Drivetrain.kMaxVoltage);
+
     }
     
     public void sendInputNyooms(double left, double right)
     {
      double leftVolts;
+     double leftVolts2;
      double rightVolts;
+     double rightVolts2;
      
      leftVolts = (left > 0) ?
         Constants.Drivetrain.Left.Forward.kStaticFrictionFeedForward:
@@ -170,6 +253,14 @@ public class Drivetrain
      leftVolts += left * ((left > 0) ?
         Constants.Drivetrain.Left.Forward.kVoltsPerFootPerSecond:
         Constants.Drivetrain.Left.Reverse.kVoltsPerFootPerSecond);
+      
+      leftVolts2 = (left > 0) ?
+         Constants.Drivetrain.Left.Forward.kStaticFrictionFeedForward:
+         Constants.Drivetrain.Left.Reverse.kStaticFrictionFeedForward;
+      leftVolts2 += left * ((left > 0) ?
+         Constants.Drivetrain.Left.Forward.kVoltsPerFootPerSecond:
+         Constants.Drivetrain.Left.Reverse.kVoltsPerFootPerSecond);
+
      rightVolts = (right > 0) ?
         Constants.Drivetrain.Right.Forward.kStaticFrictionFeedForward:
         Constants.Drivetrain.Right.Reverse.kStaticFrictionFeedForward;
@@ -177,21 +268,42 @@ public class Drivetrain
         Constants.Drivetrain.Right.Forward.kVoltsPerFootPerSecond:
         Constants.Drivetrain.Right.Reverse.kVoltsPerFootPerSecond);
 
+      rightVolts2 = (right > 0)?
+         Constants.Drivetrain.Right.Forward.kStaticFrictionFeedForward:
+         Constants.Drivetrain.Right.Reverse.kStaticFrictionFeedForward;
+
+      rightVolts2 += right * ((right > 0) ? 
+         Constants.Drivetrain.Right.Forward.kVoltsPerFootPerSecond:
+         Constants.Drivetrain.Right.Reverse.kVoltsPerFootPerSecond);
+
      sendInputVolts(leftVolts, rightVolts);
+     sendInputNyooms(leftVolts2, right);
     }
     
     public void zeroSensors()
     {
        drivetrain_leftMaster.setSelectedSensorPosition(0, 0, 30);
+       drivetrain_leftMaster2.setSelectedSensorPosition(0, 0, 30);
+
        drivetrain_rightMaster.setSelectedSensorPosition(0, 0, 30);
+       drivetrain_rightMaster2.setSelectedSensorPosition(0, 0, 30);
+
     }
     public int getLeftEncoderPosition()
     {
       return drivetrain_leftMaster.getSelectedSensorPosition();
     }
+
+    public int getLeft2EncoderPosition(){
+       return drivetrain_leftMaster2.getSelectedSensorPosition();
+    }
     public int getRightEncoderPosition()
     {
       return drivetrain_rightMaster.getSelectedSensorPosition();
+    }
+
+    public int getRight2EncoderPosition(){
+       return drivetrain_rightMaster2.getSelectedSensorPosition();
     }
     
     /*

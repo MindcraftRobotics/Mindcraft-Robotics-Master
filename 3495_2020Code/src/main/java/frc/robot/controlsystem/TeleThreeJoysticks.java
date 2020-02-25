@@ -6,6 +6,7 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
@@ -31,6 +32,7 @@ public class TeleThreeJoysticks
     public UsbCamera cameraBack;
     public UsbCamera camera;
     public VideoSink server;
+    
 
 
     private TeleThreeJoysticks()
@@ -57,17 +59,36 @@ public class TeleThreeJoysticks
         -1.0, 1.0);
         
         robosystem.drivetrain.setPower(left, right);
+        robosystem.lift.manualAdjust(coDriver.getY());
+
+        
+        if(coDriver.getRawButtonReleased(7)) {
+            robosystem.lift.lvl1();
+        }
+        if(coDriver.getRawButtonReleased(8)) {
+            robosystem.lift.lvl2();
+        }
+        /*
+        if(coDriver.getPOV() == 0){
+            robosystem.lift.lvl1();
+            System.out.println("lifting to first level");
+        }
+        if(coDriver.getPOV() == 180){
+            robosystem.lift.lvl2();
+            System.out.println("lifting to second level");
+        }
+        */
 
         if (driverRight.getRawButton(2)) {
             robosystem.colorwheel.spinWheel();
         }
-        if (driverLeft.getRawButton(2)) {
+        if (driverRight.getRawButton(3)) {
             robosystem.colorwheel.selectColor();
         }
         if (driverLeft.getRawButtonReleased(5)) {
             robosystem.colorwheel.resetRotations();
-          
         }  
+        
        
 }
 
@@ -75,6 +96,33 @@ public class TeleThreeJoysticks
     private void coDriver()
     {
         //robosystem.colorwheel.setPower(coDriver.getY());
+        if(coDriver.getRawButton(4)) {
+            robosystem.shooter.shoot();
+        }else if(coDriver.getRawButton(3)) {
+            robosystem.shooter.intake();
+        }else{
+            robosystem.shooter.intakeStopIntake();
+            robosystem.shooter.intakeStopShoot();
+        }
+        
+        /*
+        
+        if(coDriver.getRawButtonReleased(1) && robosystem.shooter.getSolenoidPosition() == Value.kReverse) {
+            robosystem.shooter.raise();
+        }else if(coDriver.getRawButtonReleased(1) && robosystem.shooter.getSolenoidPosition() == Value.kForward) {
+            robosystem.shooter.lower();
+        }
+
+        /*
+        if(coDriver.getRawButtonReleased(5) && robosystem.colorwheel.getSolenoidPosition() == Value.kReverse)
+        {
+            robosystem.colorwheel.raise();
+
+        }else if(coDriver.getRawButtonReleased(6) && robosystem.colorwheel.getSolenoidPosition() == Value.kForward){
+            robosystem.colorwheel.lower();
+
+        }
+        */
     }
 
     

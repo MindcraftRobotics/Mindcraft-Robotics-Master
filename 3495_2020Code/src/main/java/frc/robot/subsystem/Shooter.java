@@ -13,10 +13,12 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.fasterxml.jackson.databind.ser.impl.FailingSerializer;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
+//import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+//import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+
+import static edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.Constants;
 import frc.robot.Ports;
 import frc.robot.controlsystem.TeleThreeJoysticks;
@@ -28,15 +30,15 @@ public class Shooter
     // Talons and junk 
     private TalonSRX shooter_outtake;
     private TalonSRX shooter_intake;
-    private DoubleSolenoid solenoidPiston;
+    //private DoubleSolenoid solenoidPiston;
     
     //constructor
     private Shooter()
     {
         shooter_intake = new TalonSRX(Ports.SHOOTER_TALON_IN);
         shooter_outtake = new TalonSRX(Ports.SHOOTER_TALON_OUT);
-        solenoidPiston = new DoubleSolenoid(0, 1);
-        solenoidPiston.set(Value.kReverse);
+        //solenoidPiston = new DoubleSolenoid(0, 1); // change the ports 
+        //solenoidPiston.set(Value.kReverse);
         
 
         shooter_outtake.setInverted(false);
@@ -60,9 +62,21 @@ public class Shooter
     }
     public void shoot()
     {
-        
+        shooter_outtake.set(ControlMode.PercentOutput, .5);
+        shooter_intake.set(ControlMode.PercentOutput, -.5);
         
     }
+    public void intake() {
+        shooter_intake.set(ControlMode.PercentOutput, -.5);
+    }
+    public void intakeStopIntake(){
+        shooter_intake.set(ControlMode.PercentOutput, 0);
+    
+    }
+    public void intakeStopShoot(){
+        shooter_intake.set(ControlMode.PercentOutput, 0);
+    }
+    /*
     public void raise() {
         solenoidPiston.set(Value.kForward);
     }
@@ -72,6 +86,7 @@ public class Shooter
     public Value getSolenoidPosition() {
         return solenoidPiston.get();
     }
+    */
 
 
 

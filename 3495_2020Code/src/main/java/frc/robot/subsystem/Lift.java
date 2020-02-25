@@ -62,6 +62,16 @@ public class Lift extends PIDSubsystem{
         this.disable();
         liftTalon.set(ControlMode.PercentOutput, power);
     }
+    public void goUp() {
+        this.disable();
+        liftTalon.set(ControlMode.PercentOutput, .50);
+    }
+    public void goDown() {
+        this.disable();
+        liftTalon.set(ControlMode.PercentOutput, -.50);
+    }
+
+    
     protected void usePIDOutput(double output) {
         liftTalon.set(ControlMode.Velocity, output);
     }

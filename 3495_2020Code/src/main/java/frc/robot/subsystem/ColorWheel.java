@@ -20,6 +20,9 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import java.lang.Math;
 import edu.wpi.first.wpilibj.DriverStation;
+//import edu.wpi.first.wpilibj.DoubleSolenoid;
+//import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+
 
 import frc.robot.Constants;
 import frc.robot.Ports;
@@ -30,6 +33,8 @@ public class ColorWheel {
 
     private final I2C.Port i2cPort = I2C.Port.kOnboard;
     private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
+    //private DoubleSolenoid solenoidPistonColorWheel;
+
    
     /*private final Color kBlueTarget = ColorMatch.makeColor(0.123, 0.422, 0.453);
     private final Color kGreenTarget = ColorMatch.makeColor(0.172, 0.573, 0.253);
@@ -78,6 +83,8 @@ public class ColorWheel {
         colorSpinner = new TalonSRX(Ports.COLOR_SPINNER);
         colorLog = new String[24];
         colorSpinner.configOpenloopRamp(0.5);
+        //solenoidPistonColorWheel = new DoubleSolenoid(0, 1); // change the ports
+        //solenoidPistonColorWheel.set(Value.kReverse);
 
 
 
@@ -278,6 +285,22 @@ public class ColorWheel {
         }
 
     }
+
+    /*
+    public void raise(){
+        solenoidPistonColorWheel.set(Value.kForward);
+    }
+
+    public void lower(){
+        solenoidPistonColorWheel.set(Value.kReverse);
+    }
+
+    public Value getSolenoidPosition(){
+        return solenoidPistonColorWheel.get();
+    }
+
+*/
+
     public void update()
     {
 

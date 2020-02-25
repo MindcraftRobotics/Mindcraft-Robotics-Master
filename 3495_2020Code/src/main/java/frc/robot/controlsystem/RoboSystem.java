@@ -4,6 +4,7 @@ import frc.robot.subsystem.Drivetrain;
 import frc.robot.subsystem.ColorWheel;
 import frc.robot.subsystem.NavX;
 import frc.robot.subsystem.Lift;
+import frc.robot.subsystem.Shooter;
 
 
 public class RoboSystem {
@@ -12,6 +13,7 @@ public class RoboSystem {
     public ColorWheel colorwheel;
     public NavX navx;
     public Lift lift;
+    public Shooter shooter;
 
 
     private RoboSystem() {
@@ -19,6 +21,7 @@ public class RoboSystem {
         colorwheel = ColorWheel.getInstance();
         navx = NavX.getInstance();
         lift = Lift.getInstance();
+        shooter = Shooter.getInstance();
 
 
     }
