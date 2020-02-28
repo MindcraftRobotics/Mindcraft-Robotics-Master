@@ -1,16 +1,14 @@
 package frc.robot.subsystem;
 
-import java.sql.Driver;
-import java.util.concurrent.TimeUnit;
+
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
-import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import com.fasterxml.jackson.databind.ser.impl.FailingSerializer;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Notifier;
@@ -22,9 +20,6 @@ import edu.wpi.first.wpilibj.Notifier;
 
 import frc.robot.Constants;
 import frc.robot.Ports;
-import frc.robot.controlsystem.TeleThreeJoysticks;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.controlsystem.*;
 
 public class Drivetrain
 {
@@ -283,10 +278,10 @@ public class Drivetrain
     public void zeroSensors()
     {
        drivetrain_leftMaster.setSelectedSensorPosition(0, 0, 30);
-       drivetrain_leftMaster2.setSelectedSensorPosition(0, 0, 30);
+       //drivetrain_leftMaster2.setSelectedSensorPosition(0, 0, 30);
 
        drivetrain_rightMaster.setSelectedSensorPosition(0, 0, 30);
-       drivetrain_rightMaster2.setSelectedSensorPosition(0, 0, 30);
+       //drivetrain_rightMaster2.setSelectedSensorPosition(0, 0, 30);
 
     }
     public int getLeftEncoderPosition()

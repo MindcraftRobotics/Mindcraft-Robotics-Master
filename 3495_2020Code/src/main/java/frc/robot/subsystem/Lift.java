@@ -3,13 +3,16 @@ package frc.robot.subsystem;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
+import frc.robot.Ports;
 
 
 
 public class Lift extends PIDSubsystem{
-    TalonSRX liftTalon = new TalonSRX(1);
+    TalonSRX liftTalon = new TalonSRX(Ports.LIFT_TALON);
+    VictorSPX wrenchTalon = new VictorSPX(Ports.WRENCH_TALON);
     Encoder m_liftEncoder = new Encoder(0,1);
     private Lift() {
         super("Lift", 1.0, 0.0, 0.0);
@@ -57,6 +60,7 @@ public class Lift extends PIDSubsystem{
     public void setDistancePerPulse(int distancePerPulse) {
         m_liftEncoder.setDistancePerPulse(distancePerPulse);
     }
+    
     
     public void manualAdjust(double power) {
         this.disable();

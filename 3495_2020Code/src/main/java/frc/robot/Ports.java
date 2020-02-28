@@ -16,14 +16,16 @@ public class Ports {             // public: we want it to be accessible, right?
     public static final int COLOR_SPINNER = 8;
     public static final int SHOOTER_TALON_OUT = 5;
     public static final int SHOOTER_TALON_IN = 2;
+    public static final int LIFT_TALON = 9;
+    public static final int WRENCH_TALON = 10;
     
 
 
 
-    public static final int JOYSTICK_LEFT = 3;
+    public static final int JOYSTICK_LEFT = 0;
     public static final int JOYSTICK_RIGHT = 1;
-    public static final int JOYSTICK_CODRIVER = 0;
-    public static final int XBOX_CODRIVER = 2;
+    public static final int JOYSTICK_CODRIVER = 2;
+    public static final int XBOX_CODRIVER = 3;
 
 
     

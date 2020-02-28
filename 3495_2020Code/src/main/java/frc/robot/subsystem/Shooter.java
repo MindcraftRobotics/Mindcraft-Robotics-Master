@@ -12,13 +12,16 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.fasterxml.jackson.databind.ser.impl.FailingSerializer;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-//import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
+
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Notifier;
-//import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
-import static edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.Constants;
 import frc.robot.Ports;
 import frc.robot.controlsystem.TeleThreeJoysticks;
@@ -28,22 +31,17 @@ import frc.robot.controlsystem.*;
 public class Shooter
 {
     // Talons and junk 
-    private TalonSRX shooter_outtake;
-    private TalonSRX shooter_intake;
-    //private DoubleSolenoid solenoidPiston;
+    private VictorSPX shooter_outtake;
+    private VictorSPX shooter_intake;
+    private Solenoid solenoidPiston;
     
     //constructor
     private Shooter()
     {
-        shooter_intake = new TalonSRX(Ports.SHOOTER_TALON_IN);
-        shooter_outtake = new TalonSRX(Ports.SHOOTER_TALON_OUT);
-        //solenoidPiston = new DoubleSolenoid(0, 1); // change the ports 
-        //solenoidPiston.set(Value.kReverse);
-        
-
-        shooter_outtake.setInverted(false);
-        shooter_intake.setInverted(false);
-
+        shooter_intake = new VictorSPX(Ports.SHOOTER_TALON_IN);
+        shooter_outtake = new VictorSPX(Ports.SHOOTER_TALON_OUT);
+        solenoidPiston = new Solenoid(0); // change the ports 
+        solenoidPiston.set(false);
         shooter_outtake.configNominalOutputForward(0,10);
         shooter_outtake.configNominalOutputReverse(0,10);
         shooter_outtake.configPeakOutputForward(1,10);
@@ -63,11 +61,11 @@ public class Shooter
     public void shoot()
     {
         shooter_outtake.set(ControlMode.PercentOutput, .5);
-        shooter_intake.set(ControlMode.PercentOutput, -.5);
+        shooter_intake.set(ControlMode.PercentOutput, .5);
         
     }
     public void intake() {
-        shooter_intake.set(ControlMode.PercentOutput, -.5);
+        shooter_intake.set(ControlMode.PercentOutput, .5);
     }
     public void intakeStopIntake(){
         shooter_intake.set(ControlMode.PercentOutput, 0);
@@ -76,25 +74,15 @@ public class Shooter
     public void intakeStopShoot(){
         shooter_intake.set(ControlMode.PercentOutput, 0);
     }
-    /*
+    
     public void raise() {
-        solenoidPiston.set(Value.kForward);
+        solenoidPiston.set(true);
     }
     public void lower() {
-        solenoidPiston.set(Value.kReverse);
+        solenoidPiston.set(false);
     }
-    public Value getSolenoidPosition() {
+    public boolean getSolenoidPosition() {
         return solenoidPiston.get();
     }
-    */
-
-
-
-
-
+    
 }
-
-
-
-
-

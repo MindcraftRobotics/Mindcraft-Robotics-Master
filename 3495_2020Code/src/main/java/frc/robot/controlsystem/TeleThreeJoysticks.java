@@ -64,20 +64,25 @@ public class TeleThreeJoysticks
         
         if(coDriver.getRawButtonReleased(7)) {
             robosystem.lift.lvl1();
+        }else{
+            robosystem.lift.setPower(0);
         }
         if(coDriver.getRawButtonReleased(8)) {
             robosystem.lift.lvl2();
+        }else{
+            robosystem.lift.setPower(0);
         }
-        /*
+        
         if(coDriver.getPOV() == 0){
-            robosystem.lift.lvl1();
-            System.out.println("lifting to first level");
+            robosystem.lift.goUp();
+            
+        }else if(coDriver.getPOV() == 180){
+            robosystem.lift.goDown();
+        } else {
+            robosystem.lift.setPower(0);
         }
-        if(coDriver.getPOV() == 180){
-            robosystem.lift.lvl2();
-            System.out.println("lifting to second level");
-        }
-        */
+        
+        
 
         if (driverRight.getRawButton(2)) {
             robosystem.colorwheel.spinWheel();
@@ -96,9 +101,9 @@ public class TeleThreeJoysticks
     private void coDriver()
     {
         //robosystem.colorwheel.setPower(coDriver.getY());
-        if(coDriver.getRawButton(4)) {
+        if(coDriver.getRawButton(2)) {
             robosystem.shooter.shoot();
-        }else if(coDriver.getRawButton(3)) {
+        }else if(coDriver.getRawButton(4)) {
             robosystem.shooter.intake();
         }else{
             robosystem.shooter.intakeStopIntake();
@@ -107,22 +112,22 @@ public class TeleThreeJoysticks
         
         /*
         
-        if(coDriver.getRawButtonReleased(1) && robosystem.shooter.getSolenoidPosition() == Value.kReverse) {
+        if(coDriver.getRawButtonReleased(1) && robosystem.shooter.getSolenoidPosition() == false) {
             robosystem.shooter.raise();
-        }else if(coDriver.getRawButtonReleased(1) && robosystem.shooter.getSolenoidPosition() == Value.kForward) {
+        }else if(coDriver.getRawButtonReleased(1) && robosystem.shooter.getSolenoidPosition() == true) {
             robosystem.shooter.lower();
         }
 
-        /*
-        if(coDriver.getRawButtonReleased(5) && robosystem.colorwheel.getSolenoidPosition() == Value.kReverse)
+        /* */
+        if(coDriver.getRawButtonReleased(5) && robosystem.colorwheel.getSolenoidPosition() == false)
         {
             robosystem.colorwheel.raise();
 
-        }else if(coDriver.getRawButtonReleased(6) && robosystem.colorwheel.getSolenoidPosition() == Value.kForward){
+        }else if(coDriver.getRawButtonReleased(6) && robosystem.colorwheel.getSolenoidPosition() == true){
             robosystem.colorwheel.lower();
 
         }
-        */
+        
     }
 
     

@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -20,8 +20,10 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import java.lang.Math;
 import edu.wpi.first.wpilibj.DriverStation;
-//import edu.wpi.first.wpilibj.DoubleSolenoid;
-//import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+
 
 
 import frc.robot.Constants;
@@ -33,7 +35,7 @@ public class ColorWheel {
 
     private final I2C.Port i2cPort = I2C.Port.kOnboard;
     private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
-    //private DoubleSolenoid solenoidPistonColorWheel;
+    private Solenoid solenoidPistonColorWheel;
 
    
     /*private final Color kBlueTarget = ColorMatch.makeColor(0.123, 0.422, 0.453);
@@ -64,6 +66,8 @@ public class ColorWheel {
     private double greenPercentageNormalized;
     TalonSRX colorSpinner;
     String[] colorLog;
+    Encoder wheelEncoder;
+    
     
     
 
@@ -81,10 +85,12 @@ public class ColorWheel {
         m_colorMatcher.addColorMatch(kFellowTarget);
         m_colorMatcher.addColorMatch(kFreenTarget);
         colorSpinner = new TalonSRX(Ports.COLOR_SPINNER);
-        colorLog = new String[24];
+        wheelEncoder = new Encoder(0,1);
+        colorSpinner.setNeutralMode(NeutralMode.Brake);
+        colorSpinner.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
         colorSpinner.configOpenloopRamp(0.5);
-        //solenoidPistonColorWheel = new DoubleSolenoid(0, 1); // change the ports
-        //solenoidPistonColorWheel.set(Value.kReverse);
+        solenoidPistonColorWheel = new Solenoid(0); // change the ports
+        solenoidPistonColorWheel.set(false);
 
 
 
@@ -195,7 +201,6 @@ public class ColorWheel {
     public void countRotations() {
        
         if (colorStringLast != colorString) {
-            //if it is moving counterclockwise
             if(colorString == "Fellow") {
                     transitions--;
                 
@@ -203,8 +208,6 @@ public class ColorWheel {
             if(colorString == "Freen") {
                     transitions--;
             }
-            
-            
             
             transitions++;
            
@@ -233,7 +236,6 @@ public class ColorWheel {
     public void spinWheel() {
         if(rotations <= 3.2) {
             countRotations();
-            
             colorSpinner.set(ControlMode.PercentOutput, 1);
         }else {
             //System.out.println("You are done");
@@ -286,20 +288,22 @@ public class ColorWheel {
 
     }
 
-    /*
+    
     public void raise(){
-        solenoidPistonColorWheel.set(Value.kForward);
+        solenoidPistonColorWheel.set(true); // true
     }
 
     public void lower(){
-        solenoidPistonColorWheel.set(Value.kReverse);
+        solenoidPistonColorWheel.set(false); // false
     }
 
-    public Value getSolenoidPosition(){
+
+    
+    public boolean getSolenoidPosition(){
         return solenoidPistonColorWheel.get();
     }
 
-*/
+
 
     public void update()
     {
