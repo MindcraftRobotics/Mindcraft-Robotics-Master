@@ -61,7 +61,10 @@ public class Drivetrain
         drivetrain_rightMaster.setInverted(false); // originally false
         drivetrain_rightMaster2.setInverted(false); // originally false
         
-
+        drivetrain_leftMaster.configOpenloopRamp(1.0);
+        drivetrain_leftMaster2.configOpenloopRamp(1.0);
+        drivetrain_rightMaster.configOpenloopRamp(1.0);
+        drivetrain_rightMaster2.configOpenloopRamp(1.0);
         drivetrain_leftMaster.setInverted(true);//make sure to check when the actual bot comes around originally true
         drivetrain_leftMaster2.setInverted(true); // originally true
 

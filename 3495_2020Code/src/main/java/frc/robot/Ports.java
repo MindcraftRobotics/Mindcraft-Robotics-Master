@@ -8,22 +8,22 @@ public class Ports {             // public: we want it to be accessible, right?
  * final: don't allow anyone or anything to change this value after it's compiled. instead of a "variable", we should really call it a "constant".
  * int: because port numbers are integers
  */
-    public static final int DRIVETRAIN_LEFT_MASTER = 7; // 1
-    public static final int DRIVETRAIN_LEFT_MASTER2 = 6; //2
+    public static final int DRIVETRAIN_LEFT_MASTER = 1; // 1
+    public static final int DRIVETRAIN_LEFT_MASTER2 = 2; //2
 
     public static final int DRIVETRAIN_RIGHT_MASTER = 3;
-    public static final int DRIVETRAIN_RIGHT_MASTER2 = 1;
+    public static final int DRIVETRAIN_RIGHT_MASTER2 = 4;
     public static final int COLOR_SPINNER = 8;
-    public static final int SHOOTER_TALON_OUT = 5;
-    public static final int SHOOTER_TALON_IN = 2;
-    public static final int LIFT_TALON = 9;
-    public static final int WRENCH_TALON = 10;
+    public static final int SHOOTER_TALON_OUT = 6; // old port 6 should be 6
+    public static final int SHOOTER_TALON_IN = 7;
+    public static final int LIFT_TALON = 5;
+    public static final int WRENCH_TALON = 9;
     
 
 
 
-    public static final int JOYSTICK_LEFT = 0;
-    public static final int JOYSTICK_RIGHT = 1;
+    public static final int JOYSTICK_LEFT = 1;
+    public static final int JOYSTICK_RIGHT = 0;
     public static final int JOYSTICK_CODRIVER = 2;
     public static final int XBOX_CODRIVER = 3;
 

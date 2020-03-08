@@ -40,8 +40,8 @@ public class Shooter
     {
         shooter_intake = new VictorSPX(Ports.SHOOTER_TALON_IN);
         shooter_outtake = new VictorSPX(Ports.SHOOTER_TALON_OUT);
-        solenoidPiston = new Solenoid(0); // change the ports 
-        solenoidPiston.set(false);
+        solenoidPiston = new Solenoid(2); // change the ports 
+        this.lower();
         shooter_outtake.configNominalOutputForward(0,10);
         shooter_outtake.configNominalOutputReverse(0,10);
         shooter_outtake.configPeakOutputForward(1,10);
@@ -61,19 +61,17 @@ public class Shooter
     public void shoot()
     {
         shooter_outtake.set(ControlMode.PercentOutput, .5);
-        shooter_intake.set(ControlMode.PercentOutput, .5);
+        shooter_intake.set(ControlMode.PercentOutput, -.5);
         
     }
     public void intake() {
-        shooter_intake.set(ControlMode.PercentOutput, .5);
+        shooter_intake.set(ControlMode.PercentOutput, -.5);
     }
-    public void intakeStopIntake(){
+    public void intakeStop(){
         shooter_intake.set(ControlMode.PercentOutput, 0);
-    
+        shooter_outtake.set(ControlMode.PercentOutput, 0);
     }
-    public void intakeStopShoot(){
-        shooter_intake.set(ControlMode.PercentOutput, 0);
-    }
+  
     
     public void raise() {
         solenoidPiston.set(true);
@@ -84,5 +82,11 @@ public class Shooter
     public boolean getSolenoidPosition() {
         return solenoidPiston.get();
     }
+
+    public void intakeReverse(){
+        shooter_intake.set(ControlMode.PercentOutput, .5);
+    }
+    
+    
     
 }

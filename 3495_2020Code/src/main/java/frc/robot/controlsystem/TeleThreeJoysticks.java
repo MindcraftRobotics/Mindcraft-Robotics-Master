@@ -6,7 +6,7 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+//import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
@@ -41,7 +41,7 @@ public class TeleThreeJoysticks
         driverLeft = new Joystick(Ports.JOYSTICK_LEFT);
         driverRight = new Joystick(Ports.JOYSTICK_RIGHT);
         coDriver = new Joystick(Ports.JOYSTICK_CODRIVER);
-        camera = CameraServer.getInstance().startAutomaticCapture(0);
+        //camera = CameraServer.getInstance().startAutomaticCapture(0);
         //camera = CameraServer.setQuality(50);
         
     } 
@@ -59,40 +59,27 @@ public class TeleThreeJoysticks
         -1.0, 1.0);
         
         robosystem.drivetrain.setPower(left, right);
-        robosystem.lift.manualAdjust(coDriver.getY());
+       
 
         
-        if(coDriver.getRawButtonReleased(7)) {
-            robosystem.lift.lvl1();
-        }else{
-            robosystem.lift.setPower(0);
-        }
-        if(coDriver.getRawButtonReleased(8)) {
-            robosystem.lift.lvl2();
-        }else{
-            robosystem.lift.setPower(0);
-        }
+      
         
-        if(coDriver.getPOV() == 0){
-            robosystem.lift.goUp();
-            
-        }else if(coDriver.getPOV() == 180){
-            robosystem.lift.goDown();
-        } else {
-            robosystem.lift.setPower(0);
-        }
-        
-        
-
-        if (driverRight.getRawButton(2)) {
+        if(driverLeft.getRawButton(2)) {
+            robosystem.colorwheel.setPower(.5);
+        }else if (driverRight.getRawButton(2)) {
             robosystem.colorwheel.spinWheel();
         }
-        if (driverRight.getRawButton(3)) {
+        else if (driverRight.getRawButton(3)) {
             robosystem.colorwheel.selectColor();
+        }else {
+            robosystem.colorwheel.setPower(0);
+
         }
+
         if (driverLeft.getRawButtonReleased(5)) {
             robosystem.colorwheel.resetRotations();
         }  
+    
         
        
 }
@@ -101,24 +88,51 @@ public class TeleThreeJoysticks
     private void coDriver()
     {
         //robosystem.colorwheel.setPower(coDriver.getY());
+        //robosystem.lift.manualAdjust(-coDriver.getY());
         if(coDriver.getRawButton(2)) {
             robosystem.shooter.shoot();
-        }else if(coDriver.getRawButton(4)) {
+        }else if(coDriver.getRawButton(3)) {
             robosystem.shooter.intake();
+        }else if(coDriver.getRawButton(9)){
+            robosystem.shooter.intakeReverse();
+        
         }else{
-            robosystem.shooter.intakeStopIntake();
-            robosystem.shooter.intakeStopShoot();
+            robosystem.shooter.intakeStop();
         }
         
-        /*
+        if(coDriver.getRawButton(7)) {
+            robosystem.lift.runWench();
+            
+        }else {
+            robosystem.lift.stopWench();
+        }
+      
+
+        
+        if(coDriver.getPOV() == 0 && robosystem.lift.getDistance() < 37500){
+            robosystem.lift.goUp();
+            
+        }else if(coDriver.getPOV() == 180 && robosystem.lift.getDistance() > 300){
+            robosystem.lift.goDown();
+        }else {
+            robosystem.lift.stop();
+        }
+         
+        
+        
+        if(robosystem.lift.getDistance() < 0) {
+            robosystem.lift.zeroSensor();
+        }
+        
+        
         
         if(coDriver.getRawButtonReleased(1) && robosystem.shooter.getSolenoidPosition() == false) {
             robosystem.shooter.raise();
-        }else if(coDriver.getRawButtonReleased(1) && robosystem.shooter.getSolenoidPosition() == true) {
+        }else if(coDriver.getRawButtonReleased(4) && robosystem.shooter.getSolenoidPosition() == true) {
             robosystem.shooter.lower();
         }
 
-        /* */
+        
         if(coDriver.getRawButtonReleased(5) && robosystem.colorwheel.getSolenoidPosition() == false)
         {
             robosystem.colorwheel.raise();

@@ -1,3 +1,5 @@
+
+
 package frc.robot.subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -13,13 +15,17 @@ import frc.robot.Ports;
 public class Lift extends PIDSubsystem{
     TalonSRX liftTalon = new TalonSRX(Ports.LIFT_TALON);
     VictorSPX wrenchTalon = new VictorSPX(Ports.WRENCH_TALON);
-    Encoder m_liftEncoder = new Encoder(0,1);
+    
     private Lift() {
-        super("Lift", 1.0, 0.0, 0.0);
+        super("Lift", 6.5, 0.0, 0.65); // P compares set point with actual value * resulting error 
         liftTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
-        this.setPercentTolerance(5.0);
+        this.setPercentTolerance(0.5);
+        liftTalon.setSelectedSensorPosition(0);
+
+       
+        
         this.enable();
-        this.ground();
+
 
     }
     
@@ -31,35 +37,42 @@ public class Lift extends PIDSubsystem{
     }
     public void initDefaultCommand() {
 
+
     }
     protected double returnPIDInput() {
-         return m_liftEncoder.getDistance(); 
+         return -liftTalon.getSelectedSensorPosition();
     }
     public boolean atSetpoint() {
         return this.atSetpoint();
     }
     public void lvl1() {
         this.enable();
-        this.setSetpoint(2000);
+        this.setSetpoint(10000.0);
+        //liftTalon.set(ControlMode.PercentOutput, 1);
+    }
+    public void runWench() {
+        wrenchTalon.set(ControlMode.PercentOutput, -.5);
+    }
+    public void stopWench() {
+        wrenchTalon.set(ControlMode.PercentOutput, 0);
     }
     public void lvl2() {
         this.enable();
-        this.setSetpoint(3000);
+        this.setSetpoint(15000.0);
+       // liftTalon.set(ControlMode.PercentOutput, 1);
     }
     public void ground() {  
         this.enable();
-        this.setSetpoint(10);
+        this.setSetpoint(0.0);
 
     }
     public double getDistance() {
-        return m_liftEncoder.getDistance();
+        return -liftTalon.getSelectedSensorPosition();
     }
-    public double getDistancePerPulse() {
-        return m_liftEncoder.getDistancePerPulse();
+    public void zeroSensor() {
+        liftTalon.setSelectedSensorPosition(0);
     }
-    public void setDistancePerPulse(int distancePerPulse) {
-        m_liftEncoder.setDistancePerPulse(distancePerPulse);
-    }
+
     
     
     public void manualAdjust(double power) {
@@ -68,17 +81,22 @@ public class Lift extends PIDSubsystem{
     }
     public void goUp() {
         this.disable();
-        liftTalon.set(ControlMode.PercentOutput, .50);
+        liftTalon.set(ControlMode.PercentOutput, 1);
     }
     public void goDown() {
         this.disable();
-        liftTalon.set(ControlMode.PercentOutput, -.50);
+        liftTalon.set(ControlMode.PercentOutput, -1);
+    }
+    public void stop() {
+        this.disable();
+        liftTalon.set(ControlMode.PercentOutput, 0);
     }
 
     
     protected void usePIDOutput(double output) {
         liftTalon.set(ControlMode.Velocity, output);
     }
+    
   
     public void setPower(double power) {
         this.enable();

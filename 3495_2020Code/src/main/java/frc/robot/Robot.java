@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.networktables.*;
@@ -70,6 +71,7 @@ public class Robot extends TimedRobot {
     teleControllers = TeleThreeJoysticks.getInstance();
     robosystem = RoboSystem.getInstance();
     CameraServer.getInstance().startAutomaticCapture();
+    robosystem.colorwheel.lower();
 
     //pauloGarcia = AutoModeExecutor.getInstance();
     
@@ -83,18 +85,31 @@ public class Robot extends TimedRobot {
     //kaceyPitcher = PathManager.getInstance();
   }
   
+  
   @Override
   public void teleopInit() {
-
+    robosystem.colorwheel.raise();
+    robosystem.shooter.lower();
+     
    
   }
+  /*
+  @Override
+  public void disabledPeriodic() {
+    super.disabledPeriodic();
+    robosystem.colorwheel.raise();
+    //robosystem.shooter.raise();
+    
+  }
+ */
 
 
   @Override
   public void robotPeriodic() {
+    System.out.println(robosystem.lift.getDistance());
    // robosystem.drivetrain.odometry.Update();
    //NavX.writeToDash();
-   SmartDashboard.putNumber("axis", teleControllers.driverRight.getY());
+   //SmartDashboard.putNumber("axis", teleControllers.driverRight.getY());
 
    //System.out.println(Limelight.getHeight());
    //SmartDashboard.putNumber("visionbox", Limelight.getTx());
@@ -112,6 +127,7 @@ public class Robot extends TimedRobot {
     valueHit = false;
     finishedDistance = false;
     ledMode.setValue(3);
+    
     
   }
 
@@ -183,7 +199,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    robosystem.colorwheel.setPower(teleControllers.coDriver.getY());
+    //robosystem.colorwheel.setPower(teleControllers.coDriver.getY());
     robosystem.colorwheel.readColor();
     //robosystem.colorwheel.countRotations();
     //double current = compressor.getCompressorCurrent();
@@ -226,6 +242,16 @@ public class Robot extends TimedRobot {
     }
   
     }
+    
+    if(teleControllers.coDriver.getRawButtonPressed(9))
+    {
+      compressor.setClosedLoopControl(true);
+    }else if(teleControllers.coDriver.getRawButtonPressed(10))
+    {
+      compressor.setClosedLoopControl(false);
+
+    }
+    
    
   }
 

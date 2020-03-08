@@ -85,12 +85,12 @@ public class ColorWheel {
         m_colorMatcher.addColorMatch(kFellowTarget);
         m_colorMatcher.addColorMatch(kFreenTarget);
         colorSpinner = new TalonSRX(Ports.COLOR_SPINNER);
-        wheelEncoder = new Encoder(0,1);
+        colorSpinner.setSelectedSensorPosition(0);
         colorSpinner.setNeutralMode(NeutralMode.Brake);
-        colorSpinner.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
-        colorSpinner.configOpenloopRamp(0.5);
-        solenoidPistonColorWheel = new Solenoid(0); // change the ports
-        solenoidPistonColorWheel.set(false);
+        //colorSpinner.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
+        //colorSpinner.configOpenloopRamp(0.5);
+        solenoidPistonColorWheel = new Solenoid(1); // change the ports
+        this.lower();
 
 
 
@@ -107,6 +107,9 @@ public class ColorWheel {
         return instance;
     }
 
+    public int getDistance() {
+        return colorSpinner.getSelectedSensorPosition();
+    }
     public void readColor() {
         Color detectedColor = m_colorSensor.getColor();
         double redValue = m_colorSensor.getRed();
@@ -177,10 +180,10 @@ public class ColorWheel {
         }
 
    
-    /*SmartDashboard.putNumber("Red", detectedColor.red);
+    SmartDashboard.putNumber("Red", detectedColor.red);
     SmartDashboard.putNumber("Green", detectedColor.green);
-    SmartDashboard.putNumber("Blue", detectedColor.blue);*/
-    /*SmartDashboard.putNumber("Red", red);
+    SmartDashboard.putNumber("Blue", detectedColor.blue);
+    SmartDashboard.putNumber("Red", red);
     SmartDashboard.putNumber("Green", green);
     SmartDashboard.putNumber("Blue", blue);
 
@@ -195,11 +198,11 @@ public class ColorWheel {
     SmartDashboard.putNumber("Confidence", match.confidence);
     SmartDashboard.putString("Detected Color", colorString);
     SmartDashboard.putString("Selected Color", selectedColor);
-    SmartDashboard.putNumber("Total Intensity", total);*/
+    SmartDashboard.putNumber("Total Intensity", total);
     
     }
     public void countRotations() {
-       
+
         if (colorStringLast != colorString) {
             if(colorString == "Fellow") {
                     transitions--;
@@ -218,8 +221,10 @@ public class ColorWheel {
         //System.out.println(colorLog);
         colorStringLast = colorString;
         rotations = transitions/8;
+    
         SmartDashboard.putNumber("Rotations", rotations);
         SmartDashboard.putNumber("Transitions", transitions);
+        SmartDashboard.putString("Color Last", colorStringLast);
     }
     
     
@@ -233,19 +238,23 @@ public class ColorWheel {
         colorStringLast = colorString;
     }
     
+    public void setPower(double power) {
+        colorSpinner.set(ControlMode.PercentOutput, power);
+    }
+
     public void spinWheel() {
+
         if(rotations <= 3.2) {
             countRotations();
             colorSpinner.set(ControlMode.PercentOutput, 1);
+            
         }else {
-            //System.out.println("You are done");
+            
             colorSpinner.set(ControlMode.PercentOutput, 0);
         }
         
     }
-    public void setPower(double power) {
-        colorSpinner.set(ControlMode.PercentOutput, power);
-    }
+    
     
 
     public void selectColor() {
@@ -291,17 +300,21 @@ public class ColorWheel {
     
     public void raise(){
         solenoidPistonColorWheel.set(true); // true
+       
     }
 
     public void lower(){
         solenoidPistonColorWheel.set(false); // false
+
     }
 
 
     
     public boolean getSolenoidPosition(){
         return solenoidPistonColorWheel.get();
+
     }
+
 
 
 
