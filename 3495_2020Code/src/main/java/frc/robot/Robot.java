@@ -88,8 +88,8 @@ public class Robot extends TimedRobot {
   
   @Override
   public void teleopInit() {
-    robosystem.colorwheel.raise();
-    robosystem.shooter.lower();
+
+
      
    
   }
@@ -106,7 +106,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    System.out.println(robosystem.lift.getDistance());
+  System.out.println(robosystem.lift.getDistance());
    // robosystem.drivetrain.odometry.Update();
    //NavX.writeToDash();
    //SmartDashboard.putNumber("axis", teleControllers.driverRight.getY());

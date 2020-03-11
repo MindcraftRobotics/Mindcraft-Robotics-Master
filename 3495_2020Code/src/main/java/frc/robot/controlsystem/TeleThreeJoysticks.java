@@ -61,6 +61,14 @@ public class TeleThreeJoysticks
         robosystem.drivetrain.setPower(left, right);
        
 
+        if(driverRight.getRawButton(1)) {
+            robosystem.shooter.shoot();
+        }else if(driverLeft.getRawButton(1)) {
+            robosystem.shooter.intake();
+       
+        }else{
+            robosystem.shooter.intakeStop();
+        }
         
       
         
@@ -69,7 +77,7 @@ public class TeleThreeJoysticks
         }else if (driverRight.getRawButton(2)) {
             robosystem.colorwheel.spinWheel();
         }
-        else if (driverRight.getRawButton(3)) {
+        else if (driverLeft.getRawButton(4)) {
             robosystem.colorwheel.selectColor();
         }else {
             robosystem.colorwheel.setPower(0);
@@ -78,10 +86,20 @@ public class TeleThreeJoysticks
 
         if (driverLeft.getRawButtonReleased(5)) {
             robosystem.colorwheel.resetRotations();
-        }  
-    
+        }
         
-       
+        
+        /*
+        // 30% power to drivetrain 
+        if(driverRight.getRawButton(3))
+        {
+            robosystem.drivetrain.velocityControl(0.3, 0.3);
+            robosystem.drivetrain.setPower(0.3, 0.3);
+        }else{
+            robosystem.drivetrain.velocityControl(left, right);
+            robosystem.drivetrain.setPower(left, right);
+        }
+        */
 }
 
     
@@ -89,15 +107,16 @@ public class TeleThreeJoysticks
     {
         //robosystem.colorwheel.setPower(coDriver.getY());
         //robosystem.lift.manualAdjust(-coDriver.getY());
-        if(coDriver.getRawButton(2)) {
+       /* if(coDriver.getRawButton(2)) {
             robosystem.shooter.shoot();
         }else if(coDriver.getRawButton(3)) {
             robosystem.shooter.intake();
-        }else if(coDriver.getRawButton(9)){
+        */
+         if(coDriver.getRawButton(9)){
             robosystem.shooter.intakeReverse();
         
-        }else{
-            robosystem.shooter.intakeStop();
+        //}else{
+        //    robosystem.shooter.intakeStop();
         }
         
         if(coDriver.getRawButton(7)) {
@@ -109,10 +128,10 @@ public class TeleThreeJoysticks
       
 
         
-        if(coDriver.getPOV() == 0 && robosystem.lift.getDistance() < 37500){
+        if(coDriver.getPOV() == 0 || coDriver.getPOV() == 45 || coDriver.getPOV() == 315 && robosystem.lift.getDistance() < 36000){
             robosystem.lift.goUp();
             
-        }else if(coDriver.getPOV() == 180 && robosystem.lift.getDistance() > 300){
+        }else if(coDriver.getPOV() == 180 || coDriver.getPOV() == 135 || coDriver.getPOV() == 225 && robosystem.lift.getDistance() > 550){
             robosystem.lift.goDown();
         }else {
             robosystem.lift.stop();
@@ -141,8 +160,9 @@ public class TeleThreeJoysticks
             robosystem.colorwheel.lower();
 
         }
-        
     }
+        
+    
 
     
     
